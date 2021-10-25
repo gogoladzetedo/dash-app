@@ -12,8 +12,8 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
+import stocks_data_load
 # Load Data
-
 
 def get_ticker_names(obj):
     '''
@@ -216,15 +216,16 @@ row3 = html.Div(
 )
 
 
-app.title = "Stocks by T.G."
-app.layout = dbc.Container([
-    
+def serve_layout(): 
+    return dbc.Container([
     #navbar,
     #html.Hr(),
     html.H2("Performance and comparison of single stocks owned"
             , className="bg-dark text-white text-center p-3"),
     
     dbc.Container([
+        dcc.Input(id="input1", type="text", placeholder="", debounce=True),
+        html.Div(id="output"),
         row,
         html.Hr(),
     ], fluid=True, className = "border border-top-0 border-dark rounded-bottom"),
@@ -251,8 +252,19 @@ app.layout = dbc.Container([
 
 ], fluid=True)
 
+app.title = "Stocks by T.G."
 
+app.layout = serve_layout()
+
+@app.callback(
+    Output("output", "children"),
+    Output("input1", "value"),
+    Input("input1", "value")
+)
+def update_output(input1):
+    return input1, ''
     
+
 @app.callback(
     Output('single_stock', 'figure'),
     [Input('ticker_checklist', 'value'),
