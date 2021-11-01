@@ -34,52 +34,22 @@ def get_ticker_headers(initial_data, header_suffix):
         nominal_profit_headers.append(header_name)
     return nominal_profit_headers
 
-initial_stocks = {
-    'MSFT':[{'price': 210.99, 'quantity': 5, 'value': 1054.95, 'date': '2020-11-23'}],
-    'AMZN':[{'price': 3250.0, 'quantity': 1, 'value': 3250, 'date': '2020-12-02'}],
-    'SNOW': [{'price': 334.84, 'quantity': 0.153, 'value': 51.41, 'date': '2020-12-24'},
-             {'price': 215.19, 'quantity': 4, 'value': 860, 'date': '2021-03-25'}],
-    'BABA': [{'price': 275.0, 'quantity': 5, 'value': 1375,'date': '2020-11-25'},
-             {'price': 200, 'quantity': 2, 'value': 400, 'date': '2021-07-08'}],
-    'MU': [{'price': 76.71, 'quantity': 5, 'value': 383.55, 'date': '2021-07-08'}],
-    'BNGO': [{'price': 5.97, 'quantity': 58.63, 'value': 350, 'date': '2021-07-15'}],
-    'FSLY': [{'price': 64.88, 'quantity': 4.62, 'value': 300, 'date': '2021-03-04'}],
-    'BIDU': [{'price': 213.38, 'quantity': 1.3, 'value': 277.84, 'date': '2021-03-25'}],
-    'NNDM': [{'price': 9.26, 'quantity': 7.45, 'value': 69, 'date': '2020-12-24'},
-             {'price': 10.62, 'quantity': 4.72, 'value': 50, 'date': '2021-02-25'},
-             {'price': 8.72, 'quantity': 34.4, 'value': 300, 'date': '2021-03-25'},
-             {'price': 6.97, 'quantity': 33.92, 'value': 236.45, 'date': '2021-04-15'}],
-    'FSLR': [{'price': 74.98, 'quantity': 2.67, 'value': 200, 'date': '2021-03-04'}],
-    'CRM': [{'price': 242, 'quantity': 0.785, 'value': 190, 'date': '2020-12-01'}],
-    'SUMO': [{'price': 26.36, 'quantity': 6.83, 'value': 180, 'date': '2021-03-04'},
-             {'price': 19.15, 'quantity': 6.15, 'value': 117.73, 'date': '2021-04-08'}],
-    'XPEV': [{'price': 39.68, 'quantity': 3.83, 'value': 152, 'date': '2021-07-08'}],
-    'FROG': [{'price': 46.72, 'quantity': 3.24, 'value': 151.6, 'date': '2021-03-04'}],
-    'SPLK': [{'price': 140.46, 'quantity': 1.07, 'value': 150, 'date': '2021-03-04'}],
-    'U': [{'price': 125.7, 'quantity': 0.96, 'value': 120.53, 'date': '2021-02-11'},
-          {'price': 90.99, 'quantity': 2.09, 'value': 190, 'date': '2021-03-25'}],
-    '1810.HK': [{'price': 25.9, 'quantity': 30, 'value': 100.24, 'date': '2020-11-30'}],
-    'NVDA': [{'price': 123.31, 'quantity': 0.81, 'value': 100, 'date': '2020-11-30'},
-             {'price': 143.75, 'quantity': 0.7, 'value': 100, 'date': '2021-03-04'}],
-    'TSLA': [{'price': 602.48, 'quantity': 0.083, 'value': 50, 'date': '2020-11-30'},
-             {'price': 607.8, 'quantity': 0.1646, 'value': 100, 'date': '2021-03-04'},
-             {'price': 612.22, 'quantity': 0.1635, 'value': 100, 'date': '2021-03-05'}],
-    'CSCO': [{'price': 46.02, 'quantity': 1.72, 'value': 79.06, 'date': '2021-02-18'},
-             {'price': 45.68, 'quantity': 1.55, 'value': 70.81, 'date': '2021-02-25'}],
-    'AAPL': [{'price': 135.28, 'quantity': 0.53, 'value': 72, 'date': '2021-02-04'}],
-    'GOOG': [{'price': 1874.87, 'quantity': 0.0385, 'value': 71.8, 'date': '2021-01-28'}],
-    'TWLO': [{'price': 348.61, 'quantity': 0.174, 'value': 60.6, 'date': '2021-01-07'},
-             {'price': 399.48, 'quantity': 5, 'value': 1997.4, 'date': '2021-03-01'},
-             {'price': 343.32, 'quantity': 0.2037, 'value': 70, 'date': '2021-03-04'}],
-    'SPOT': [{'price': 306, 'quantity': 0.196, 'value': 59.91, 'date': '2021-02-26'}],
-    'MDB': [{'price': 402.58, 'quantity': 0.14, 'value': 55, 'date': '2021-02-04'}],
-    'DASH': [{'price': 179.9, 'quantity': 0.29, 'value': 52.7, 'date': '2020-12-10'}],
-    'NIO': [{'price': 54.14, 'quantity': 0.92, 'value': 50, 'date': '2020-11-30'}],
-    'QCOM': [{'price': 144.73, 'quantity': 0.35, 'value': 50, 'date': '2020-11-30'},
-            {'price': 132.91, 'quantity': 0.75, 'value': 100, 'date': '2021-02-18'}],
-    'AMD': [{'price': 87.62, 'quantity': 0.57, 'value': 50, 'date': '2021-02-04'}],
-}
 
+initial_stocks = {
+    'SNOW': [{'price': 334.84, 'quantity': 0.153, 'value': 51.41, 'date': '2020-12-24', 'is_empty': 0},
+             {'price': 215.19, 'quantity': 4, 'value': 860, 'date': '2021-03-25', 'is_empty': 0}],
+    'BABA': [{'price': 275.0, 'quantity': 5, 'value': 1375,'date': '2020-11-25', 'is_empty': 0},
+             {'price': 200, 'quantity': 2, 'value': 400, 'date': '2021-07-08', 'is_empty': 0},
+             {'price': 280, 'quantity': -5, 'value': -1400, 'date': '2021-07-15', 'is_empty': 0}],
+   
+    'BIDU': [{'price': 213.38, 'quantity': 1.3, 'value': 277.84, 'date': '2021-03-25', 'is_empty': 0}],
+    'NNDM': [{'price': 9.26, 'quantity': 7.45, 'value': 69, 'date': '2020-12-24', 'is_empty': 0},
+             {'price': 10.62, 'quantity': 4.72, 'value': 50, 'date': '2021-02-25', 'is_empty': 0},
+             {'price': 8.72, 'quantity': 34.4, 'value': 300, 'date': '2021-03-25', 'is_empty': 0},
+             {'price': 12.00, 'quantity': -30.00, 'value': -360.00, 'date': '2021-04-01', 'is_empty': 0},
+             {'price': 6.97, 'quantity': 33.92, 'value': 236.45, 'date': '2021-04-15', 'is_empty': 0}],
+    'FSLR': [{'price': 74.98, 'quantity': 2.67, 'value': 200, 'date': '2021-03-04', 'is_empty': 0}]
+}
 
 
 available_stocks = get_ticker_names(initial_stocks)
@@ -120,7 +90,7 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 
 all_stocks_dropdown = dcc.Dropdown(id='stock_name'
-        , options=[{'label': i, 'value': i} for i in available_stocks], value='AMZN', clearable=False
+        , options=[{'label': i, 'value': i} for i in available_stocks], value='SNOW', clearable=False
                                   )
 
 amount_type_drop = dcc.Dropdown(
@@ -163,7 +133,7 @@ tickers = dbc.Checklist(
              {"label": "{}".format(i), "value": i}
             for i in available_stocks
         ],
-        value=['MSFT', 'NNDM', 'U'],
+        value=['SNOW', 'BABA'],
         switch=True,
         inline = True,
     ),
@@ -216,16 +186,15 @@ row3 = html.Div(
 )
 
 
-def serve_layout(): 
-    return dbc.Container([
+app.title = "Stocks by T.G."
+app.layout = dbc.Container([
+    
     #navbar,
     #html.Hr(),
     html.H2("Performance and comparison of single stocks owned"
             , className="bg-dark text-white text-center p-3"),
     
     dbc.Container([
-        dcc.Input(id="input1", type="text", placeholder="", debounce=True),
-        html.Div(id="output"),
         row,
         html.Hr(),
     ], fluid=True, className = "border border-top-0 border-dark rounded-bottom"),
@@ -252,19 +221,8 @@ def serve_layout():
 
 ], fluid=True)
 
-app.title = "Stocks by T.G."
 
-app.layout = serve_layout()
-
-@app.callback(
-    Output("output", "children"),
-    Output("input1", "value"),
-    Input("input1", "value")
-)
-def update_output(input1):
-    return input1, ''
     
-
 @app.callback(
     Output('single_stock', 'figure'),
     [Input('ticker_checklist', 'value'),
@@ -313,7 +271,11 @@ def update_graph2(_tickers1, _amount_type2):
     
     for loop_ticker in _tickers1:
         fig.add_trace(go.Scatter(x=final_stocks_data['Date']
-                                 , y=final_stocks_data[loop_ticker + column_suffix]
+                                 , y=final_stocks_data[loop_ticker + '_current_total']
+                            , name=loop_ticker, mode='lines', fill='tozeroy'))
+        
+        fig.add_trace(go.Scatter(x=final_stocks_data['Date']
+                                 , y=final_stocks_data[loop_ticker + '_initial_total']
                             , name=loop_ticker, mode='lines', fill='tozeroy'))
     
     fig.update_layout(
