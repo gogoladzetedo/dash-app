@@ -101,14 +101,6 @@ amount_type_drop = dcc.Dropdown(
     className = 'text-dark',
 )
 
-amount_type_drop2 = dcc.Dropdown(
-    id="amount_current_initial",
-    options=[{"label": i, "value": i} for i in ['Current Value', 'Initial Investment']],
-    value="Current Value",
-    clearable=False,
-    className = 'text-dark',
-)
-
 
 amount_type_drop3 = dcc.Dropdown(
     id="total_amount_current_initial",
@@ -138,6 +130,14 @@ tickers = dbc.Checklist(
         inline = True,
     ),
 
+tickers_option = dcc.Dropdown(
+    id="tickers_option_list",
+    options=[{"label": i, "value": i} for i in available_stocks],
+    value="SNOW",
+    clearable=False,
+    className = 'text-dark',
+)
+
 
 
 
@@ -149,8 +149,22 @@ row = html.Div(
                 dbc.Row([
                     dbc.Col(tickers)
                 ]),]),
-                dbc.Col([dcc.Graph(id="single_stock"), dbc.Label('Select the type of profit', className = 'text-dark',), amount_type_drop], width = 5),
-                dbc.Col([dcc.Graph(id="single_stock2"), dbc.Label('Select the type of the amount', className = 'text-dark',), amount_type_drop2], width = 5),
+                dbc.Col([dcc.Graph(id="single_stock")
+                    , dbc.Label('Select the type of profit', className = 'text-dark',), amount_type_drop], width = 10),
+                ]
+        ),
+    ], style = {'padding':'20px 0px 80px 0px'}
+)
+
+row1 = html.Div(
+    [
+        dbc.Row(
+            [dbc.Col([dbc.Label("Select the stock", className = 'text-dark'),
+                      html.Hr(),
+                dbc.Row([
+                    dbc.Col(tickers_option)
+                ]),]),
+                dbc.Col([dcc.Graph(id="single_stock2")], width = 10),
             ]
         ),
     ], style = {'padding':'20px 0px 80px 0px'}
@@ -191,13 +205,26 @@ app.layout = dbc.Container([
     
     #navbar,
     #html.Hr(),
-    html.H2("Performance and comparison of single stocks owned"
+    # Chart 1
+    html.H2("Comparison of stock profits over time"
             , className="bg-dark text-white text-center p-3"),
     
     dbc.Container([
         row,
         html.Hr(),
     ], fluid=True, className = "border border-top-0 border-dark rounded-bottom"),
+
+
+    # Chart 2
+    html.H2("Performance of stock over time - Initial investment value vs Current value"
+            , className="bg-dark text-white text-center p-3"),
+    
+    dbc.Container([
+        row1,
+        html.Hr(),
+    ], fluid=True, className = "border border-top-0 border-dark rounded-bottom"),
+
+
     
     html.Br(),
     html.H2("Summary of results of all stocks together"
@@ -218,11 +245,11 @@ app.layout = dbc.Container([
     ], fluid=True, className = "border border-top-0 border-dark rounded-bottom"),
     
     html.Hr(),
-
+    
 ], fluid=True)
 
 
-    
+# Chart 1 - update by selecting stock tickers and choosing Nominal/Percent   
 @app.callback(
     Output('single_stock', 'figure'),
     [Input('ticker_checklist', 'value'),
@@ -255,28 +282,20 @@ def update_graph(_tickers1, _amount_type):
     return fig
 
 
+# Chart 2 - update by selecting stock tickers and choosing Initial investment/Current Price
 
 @app.callback(
     Output('single_stock2', 'figure'),
-    [Input('ticker_checklist', 'value'),
-     Input('amount_current_initial', 'value')])
+    Input('tickers_option_list', 'value'))
 
-def update_graph2(_tickers1, _amount_type2):
-    if _amount_type2 == 'Current Value':
-        column_suffix = '_current_total'
-    else:
-        column_suffix = '_initial_total'
-        
+def update_graph2(_ticker):
     fig = go.Figure()
-    
-    for loop_ticker in _tickers1:
-        fig.add_trace(go.Scatter(x=final_stocks_data['Date']
-                                 , y=final_stocks_data[loop_ticker + '_current_total']
-                            , name=loop_ticker, mode='lines', fill='tozeroy'))
-        
-        fig.add_trace(go.Scatter(x=final_stocks_data['Date']
-                                 , y=final_stocks_data[loop_ticker + '_initial_total']
-                            , name=loop_ticker, mode='lines', fill='tozeroy'))
+    fig.add_trace(go.Scatter(x=final_stocks_data['Date']
+                                 , y=final_stocks_data[_ticker + '_current_total']
+                            , name= 'Current value', mode='lines', fill='tozeroy'))
+    fig.add_trace(go.Scatter(x=final_stocks_data['Date']
+                                 , y=final_stocks_data[_ticker + '_initial_total']
+                            , name='Initial investment value', mode='lines', fill='tozeroy'))
     
     fig.update_layout(
         title={
@@ -284,7 +303,7 @@ def update_graph2(_tickers1, _amount_type2):
             'x':0.5,
             'xanchor': 'center',
             'yanchor': 'top'},
-        yaxis_title="Current Value (USD)" if _amount_type2 == 'Current Value' else "Invested Amount",
+        yaxis_title="Current Value and Initial investment value (USD)",
         font=dict(family="Lato", size=13)
     )
     fig.update_layout(
