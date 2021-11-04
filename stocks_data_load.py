@@ -18,7 +18,9 @@ initial_stocks = {
              {'price': 10.62, 'quantity': 4.72, 'value': 50, 'date': '2021-02-25', 'is_empty': 0},
              {'price': 8.72, 'quantity': 34.4, 'value': 300, 'date': '2021-03-25', 'is_empty': 0},
              {'price': 12.00, 'quantity': -30.00, 'value': -360.00, 'date': '2021-04-01', 'is_empty': 0},
-             {'price': 6.97, 'quantity': 33.92, 'value': 236.45, 'date': '2021-04-15', 'is_empty': 0}],
+             {'price': 6.97, 'quantity': 33.92, 'value': 236.45, 'date': '2021-04-15', 'is_empty': 0},
+             {'price': 5.00, 'quantity': -30.00, 'value': -150.00, 'date': '2021-04-19', 'is_empty': 0},
+             {'price': 6.97, 'quantity': 33.92, 'value': 236.45, 'date': '2021-04-27', 'is_empty': 0}],
     'FSLR': [{'price': 74.98, 'quantity': 2.67, 'value': 200, 'date': '2021-03-04', 'is_empty': 0}]
 }
 
@@ -78,12 +80,16 @@ def update_yahoo_data(yahoo_data, initial_data):
         current_total_price_col_name = ticker + '_current_total'
         profit_nominal_col_name = ticker + '_profit_nominal' 
         profit_rate_col_name = ticker + '_profit_rate'
-        stock_units_col_name = ticker + '_stock_units'
+        closed_initial_value_col_name = ticker + '_closed_initial_value'
+        closed_closing_value_col_name = ticker + '_closed_closing_value'
+
 
         yahoo_data[initial_price_total_col_name] = np.NaN
         yahoo_data[current_total_price_col_name] = np.NaN
         yahoo_data[profit_nominal_col_name] = np.NaN
         yahoo_data[profit_rate_col_name] = np.NaN
+        yahoo_data[closed_initial_value_col_name] = 0
+        yahoo_data[closed_closing_value_col_name] = 0
         
 
         quantity = 0
@@ -114,25 +120,34 @@ def update_yahoo_data(yahoo_data, initial_data):
                             initial_data[ticker][k]['quantity'] = leftover_quantity
 
                         else:
-                            initial_price_of_sold_stocks = initial_price_of_sold_stocks + (-initial_data[ticker][k]['value']) # -69 (-7.45 * 9.26)  
+                            initial_price_of_sold_stocks = initial_price_of_sold_stocks + (-initial_data[ticker][k]['value'])   
                             initial_data[ticker][k]['is_empty'] = 1
                             
-                        neg_quantity = leftover_quantity # -22.55
+                        neg_quantity = leftover_quantity 
 
 
                             
                 value = value + initial_price_of_sold_stocks
                 yahoo_data[initial_price_total_col_name].loc[
-                                yahoo_data['Date']>=purchase_date] = yahoo_data[ticker].loc[
+                                yahoo_data['Date']>=purchase_date] = yahoo_data[initial_price_total_col_name].loc[
                                 yahoo_data['Date']>=purchase_date].apply(lambda x: value)
 
+                
+                yahoo_data[closed_initial_value_col_name].loc[
+                                yahoo_data['Date']>=purchase_date] = yahoo_data[closed_initial_value_col_name].loc[
+                                yahoo_data['Date']>=purchase_date].apply(lambda x: x + initial_price_of_sold_stocks)
+                
+                yahoo_data[closed_closing_value_col_name].loc[
+                                yahoo_data['Date']>=purchase_date] = yahoo_data[closed_closing_value_col_name].loc[
+                                yahoo_data['Date']>=purchase_date].apply(lambda x: x + (initial_data[ticker][i]['value']))
+            
                 
             else:
                 value = value + initial_data[ticker][i]['value']
                 yahoo_data[initial_price_total_col_name].loc[
-                            yahoo_data['Date']>=purchase_date] = yahoo_data[ticker].loc[
+                            yahoo_data['Date']>=purchase_date] = yahoo_data[initial_price_total_col_name].loc[
                             yahoo_data['Date']>=purchase_date].apply(lambda x: value)
-    
+
 
             yahoo_data[current_total_price_col_name].loc[
                             yahoo_data['Date']>=purchase_date] = yahoo_data[ticker].loc[
@@ -141,10 +156,13 @@ def update_yahoo_data(yahoo_data, initial_data):
             if ticker == '1810.HK':
                 yahoo_data[current_total_price_col_name] = yahoo_data[current_total_price_col_name].apply(
                 lambda x: x*0.1287)
-   
+
             yahoo_data[profit_nominal_col_name].loc[
                             yahoo_data['Date']>=purchase_date] = yahoo_data[current_total_price_col_name].loc[
                             yahoo_data['Date']>=purchase_date].apply(lambda x: x - value)
+
+
+
             yahoo_data[profit_rate_col_name].loc[
                             yahoo_data['Date']>=purchase_date] = yahoo_data[current_total_price_col_name].loc[
                             yahoo_data['Date']>=purchase_date].apply(lambda x: 100*(x - value)/value)

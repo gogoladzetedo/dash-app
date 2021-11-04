@@ -153,7 +153,7 @@ row = html.Div(
                     , dbc.Label('Select the type of profit', className = 'text-dark',), amount_type_drop], width = 10),
                 ]
         ),
-    ], style = {'padding':'20px 0px 80px 0px'}
+    ]
 )
 
 row1 = html.Div(
@@ -167,7 +167,7 @@ row1 = html.Div(
                 dbc.Col([dcc.Graph(id="single_stock2")], width = 10),
             ]
         ),
-    ], style = {'padding':'20px 0px 80px 0px'}
+    ]
 )
 
 row2 = html.Div(
@@ -212,7 +212,7 @@ app.layout = dbc.Container([
     dbc.Container([
         row,
         html.Hr(),
-    ], fluid=True, className = "border border-top-0 border-dark rounded-bottom"),
+    ], fluid=True, className = "p-1"),
 
 
     # Chart 2
@@ -222,7 +222,7 @@ app.layout = dbc.Container([
     dbc.Container([
         row1,
         html.Hr(),
-    ], fluid=True, className = "border border-top-0 border-dark rounded-bottom"),
+    ], fluid=True, className = "p-1"),
 
 
     
@@ -233,7 +233,7 @@ app.layout = dbc.Container([
     dbc.Container([
         row2, 
         html.Hr()
-    ], fluid=True, className = "border border-top-0 border-dark rounded-bottom"),
+    ], fluid=True, className = "p-1"),
     
     html.Br(),
     html.H2("Share of stocks"
@@ -242,11 +242,11 @@ app.layout = dbc.Container([
     dbc.Container([
         row3,
         html.Hr(),
-    ], fluid=True, className = "border border-top-0 border-dark rounded-bottom"),
+    ], fluid=True, className = "p-1"),
     
     html.Hr(),
     
-], fluid=True)
+], fluid=True, className = "container-md")
 
 
 # Chart 1 - update by selecting stock tickers and choosing Nominal/Percent   
