@@ -76,20 +76,37 @@ def update_yahoo_data(yahoo_data, initial_data):
     '''
 
     for ticker in initial_data:
-        initial_price_total_col_name = ticker + '_initial_total'
-        current_total_price_col_name = ticker + '_current_total'
-        profit_nominal_col_name = ticker + '_profit_nominal' 
-        profit_rate_col_name = ticker + '_profit_rate'
+        
+        open_initial_value_col_name = ticker + '_open_initial_value'
+        open_closing_value_col_name = ticker + '_open_closing_value'
+        open_profit_nominal_col_name = ticker + '_open_profit_nominal' 
+        open_profit_rate_col_name = ticker + '_open_profit_rate'
+        
         closed_initial_value_col_name = ticker + '_closed_initial_value'
         closed_closing_value_col_name = ticker + '_closed_closing_value'
+        closed_profit_nominal_col_name = ticker + '_closed_profit_nominal'
+        closed_profit_rate_col_name = ticker + '_closed_profit_rate'
+
+        total_initial_value_col_name = ticker + '_total_initial_value'
+        total_closing_value_col_name = ticker + '_total_closing_value'
+        total_profit_nominal_col_name = ticker + '_total_profit_nominal'
+        total_profit_rate_col_name = ticker + '_total_profit_rate'
 
 
-        yahoo_data[initial_price_total_col_name] = np.NaN
-        yahoo_data[current_total_price_col_name] = np.NaN
-        yahoo_data[profit_nominal_col_name] = np.NaN
-        yahoo_data[profit_rate_col_name] = np.NaN
+        yahoo_data[open_initial_value_col_name] = np.NaN
+        yahoo_data[open_closing_value_col_name] = np.NaN
+        yahoo_data[open_profit_nominal_col_name] = np.NaN
+        yahoo_data[open_profit_rate_col_name] = np.NaN
+        
         yahoo_data[closed_initial_value_col_name] = 0
         yahoo_data[closed_closing_value_col_name] = 0
+        yahoo_data[closed_profit_nominal_col_name] = np.NaN
+        yahoo_data[closed_profit_rate_col_name] = np.NaN
+        
+        yahoo_data[total_initial_value_col_name] = np.NaN
+        yahoo_data[total_closing_value_col_name] = np.NaN
+        yahoo_data[total_profit_nominal_col_name] = np.NaN
+        yahoo_data[total_profit_rate_col_name] = np.NaN
         
 
         quantity = 0
@@ -128,44 +145,73 @@ def update_yahoo_data(yahoo_data, initial_data):
 
                             
                 value = value + initial_price_of_sold_stocks
-                yahoo_data[initial_price_total_col_name].loc[
-                                yahoo_data['Date']>=purchase_date] = yahoo_data[initial_price_total_col_name].loc[
+                yahoo_data[open_initial_value_col_name].loc[
+                                yahoo_data['Date']>=purchase_date] = yahoo_data[open_initial_value_col_name].loc[
                                 yahoo_data['Date']>=purchase_date].apply(lambda x: value)
 
                 
                 yahoo_data[closed_initial_value_col_name].loc[
                                 yahoo_data['Date']>=purchase_date] = yahoo_data[closed_initial_value_col_name].loc[
-                                yahoo_data['Date']>=purchase_date].apply(lambda x: x + initial_price_of_sold_stocks)
+                                yahoo_data['Date']>=purchase_date].apply(lambda x: x + (-initial_price_of_sold_stocks))
                 
                 yahoo_data[closed_closing_value_col_name].loc[
                                 yahoo_data['Date']>=purchase_date] = yahoo_data[closed_closing_value_col_name].loc[
-                                yahoo_data['Date']>=purchase_date].apply(lambda x: x + (initial_data[ticker][i]['value']))
+                                yahoo_data['Date']>=purchase_date].apply(lambda x: x + (-(initial_data[ticker][i]['value'])))
             
                 
             else:
                 value = value + initial_data[ticker][i]['value']
-                yahoo_data[initial_price_total_col_name].loc[
-                            yahoo_data['Date']>=purchase_date] = yahoo_data[initial_price_total_col_name].loc[
+                yahoo_data[open_initial_value_col_name].loc[
+                            yahoo_data['Date']>=purchase_date] = yahoo_data[open_initial_value_col_name].loc[
                             yahoo_data['Date']>=purchase_date].apply(lambda x: value)
 
 
-            yahoo_data[current_total_price_col_name].loc[
+            yahoo_data[open_closing_value_col_name].loc[
                             yahoo_data['Date']>=purchase_date] = yahoo_data[ticker].loc[
                             yahoo_data['Date']>=purchase_date].apply(lambda x: x * quantity)
         
             if ticker == '1810.HK':
-                yahoo_data[current_total_price_col_name] = yahoo_data[current_total_price_col_name].apply(
+                yahoo_data[open_closing_value_col_name] = yahoo_data[open_closing_value_col_name].apply(
                 lambda x: x*0.1287)
 
-            yahoo_data[profit_nominal_col_name].loc[
-                            yahoo_data['Date']>=purchase_date] = yahoo_data[current_total_price_col_name].loc[
+            yahoo_data[open_profit_nominal_col_name].loc[
+                            yahoo_data['Date']>=purchase_date] = yahoo_data[open_closing_value_col_name].loc[
                             yahoo_data['Date']>=purchase_date].apply(lambda x: x - value)
 
-
-
-            yahoo_data[profit_rate_col_name].loc[
-                            yahoo_data['Date']>=purchase_date] = yahoo_data[current_total_price_col_name].loc[
+            yahoo_data[open_profit_rate_col_name].loc[
+                            yahoo_data['Date']>=purchase_date] = yahoo_data[open_closing_value_col_name].loc[
                             yahoo_data['Date']>=purchase_date].apply(lambda x: 100*(x - value)/value)
+            
+            # Adding closed positions
+            yahoo_data[closed_profit_nominal_col_name].loc[
+                            yahoo_data['Date']>=purchase_date] = yahoo_data[closed_closing_value_col_name].loc[
+                            yahoo_data['Date']>=purchase_date] - yahoo_data[closed_initial_value_col_name].loc[
+                            yahoo_data['Date']>=purchase_date]
+            
+            yahoo_data[closed_profit_rate_col_name].loc[
+                            yahoo_data['Date']>=purchase_date] = yahoo_data[closed_profit_nominal_col_name].loc[
+                            yahoo_data['Date']>=purchase_date].apply(lambda x: x*100) / yahoo_data[closed_initial_value_col_name].loc[
+                            yahoo_data['Date']>=purchase_date]
+            # Adding totals
+            yahoo_data[total_initial_value_col_name].loc[
+                            yahoo_data['Date']>=purchase_date] = yahoo_data[open_initial_value_col_name].loc[
+                            yahoo_data['Date']>=purchase_date] + yahoo_data[closed_initial_value_col_name].loc[
+                            yahoo_data['Date']>=purchase_date]
+
+            yahoo_data[total_closing_value_col_name].loc[
+                            yahoo_data['Date']>=purchase_date] = yahoo_data[open_closing_value_col_name].loc[
+                            yahoo_data['Date']>=purchase_date] + yahoo_data[closed_closing_value_col_name].loc[
+                            yahoo_data['Date']>=purchase_date]
+
+            yahoo_data[total_profit_nominal_col_name].loc[
+                            yahoo_data['Date']>=purchase_date] = yahoo_data[total_closing_value_col_name].loc[
+                            yahoo_data['Date']>=purchase_date] - yahoo_data[total_initial_value_col_name].loc[
+                            yahoo_data['Date']>=purchase_date]
+
+            yahoo_data[total_profit_rate_col_name].loc[
+                            yahoo_data['Date']>=purchase_date] = yahoo_data[total_profit_nominal_col_name].loc[
+                            yahoo_data['Date']>=purchase_date].apply(lambda x: x*100) / yahoo_data[total_initial_value_col_name].loc[
+                            yahoo_data['Date']>=purchase_date]
         
     return yahoo_data
 
@@ -177,25 +223,64 @@ def calc_daily_sums(yahoo_data, initial_data):
     Additionally, it removes the records with null values.
     '''
     
-    initial_value_headers = get_ticker_headers(initial_data, '_initial_total')
-    current_value_headers = get_ticker_headers(initial_data, '_current_total')
-    profit_nominal_headers = get_ticker_headers(initial_data, '_profit_nominal')
-    profit_rate_headers = get_ticker_headers(initial_data, '_profit_rate')
-    
-    yahoo_data['initial_value_for_date'] = np.NaN
-    yahoo_data['current_value_for_date'] = np.NaN
-    yahoo_data['profit_nominal_for_date'] = np.NaN
-    yahoo_data['profit_rate_for_date'] = np.NaN
+    open_initial_value_headers = get_ticker_headers(initial_data, '_open_initial_value')
+    open_closing_value_headers = get_ticker_headers(initial_data, '_open_closing_value')
+    open_profit_nominal_headers = get_ticker_headers(initial_data, '_open_profit_nominal')
+    open_profit_rate_headers = get_ticker_headers(initial_data, '_open_profit_rate')
+
+    closed_initial_value_headers = get_ticker_headers(initial_data, '_closed_initial_value')
+    closed_closing_value_headers = get_ticker_headers(initial_data, '_closed_closing_value')
+    closed_profit_nominal_headers = get_ticker_headers(initial_data, '_closed_profit_nominal')
+    closed_profit_rate_headers = get_ticker_headers(initial_data, '_closed_profit_rate')
+
+    total_initial_value_headers = get_ticker_headers(initial_data, '_total_initial_value')
+    total_closing_value_headers = get_ticker_headers(initial_data, '_total_closing_value')
+    total_profit_nominal_headers = get_ticker_headers(initial_data, '_total_profit_nominal')
+    total_profit_rate_headers = get_ticker_headers(initial_data, '_total_profit_rate')
+
+
+
+    yahoo_data['open_initial_value_for_date'] = np.NaN
+    yahoo_data['open_closing_value_for_date'] = np.NaN
+    yahoo_data['open_profit_nominal_for_date'] = np.NaN
+    yahoo_data['open_profit_rate_for_date'] = np.NaN
+
+    yahoo_data['closed_initial_value_for_date'] = np.NaN
+    yahoo_data['closed_closing_value_for_date'] = np.NaN
+    yahoo_data['closed_profit_nominal_for_date'] = np.NaN
+    yahoo_data['closed_profit_rate_for_date'] = np.NaN
+
+    yahoo_data['total_initial_value_for_date'] = np.NaN
+    yahoo_data['total_closing_value_for_date'] = np.NaN
+    yahoo_data['total_profit_nominal_for_date'] = np.NaN
+    yahoo_data['total_profit_rate_for_date'] = np.NaN
+
+
     
     for i in range(0, len(yahoo_data)):
-        yahoo_data['initial_value_for_date'].loc[i] = yahoo_data[initial_value_headers].loc[i].sum().sum()
-        yahoo_data['current_value_for_date'].loc[i] = yahoo_data[current_value_headers].loc[i].sum().sum()
-        yahoo_data['profit_nominal_for_date'].loc[i] = yahoo_data[profit_nominal_headers].loc[i].sum().sum()
-        yahoo_data['profit_rate_for_date'].loc[i] = 100 * (
-            yahoo_data['current_value_for_date'].loc[i] - yahoo_data['initial_value_for_date'].loc[i]
-            ) / yahoo_data['initial_value_for_date'].loc[i]
+        yahoo_data['open_initial_value_for_date'].loc[i] = yahoo_data[open_initial_value_headers].loc[i].sum().sum()
+        yahoo_data['open_closing_value_for_date'].loc[i] = yahoo_data[open_closing_value_headers].loc[i].sum().sum()
+        yahoo_data['open_profit_nominal_for_date'].loc[i] = yahoo_data[open_profit_nominal_headers].loc[i].sum().sum()
+        yahoo_data['open_profit_rate_for_date'].loc[i] = 100 * (
+            yahoo_data['open_closing_value_for_date'].loc[i] - yahoo_data['open_initial_value_for_date'].loc[i]
+            ) / yahoo_data['open_initial_value_for_date'].loc[i]
 
-    yahoo_data = yahoo_data[yahoo_data['SNOW'].isnull()==False]
+        yahoo_data['closed_initial_value_for_date'].loc[i] = yahoo_data[closed_initial_value_headers].loc[i].sum().sum()
+        yahoo_data['closed_closing_value_for_date'].loc[i] = yahoo_data[closed_closing_value_headers].loc[i].sum().sum()
+        yahoo_data['closed_profit_nominal_for_date'].loc[i] = yahoo_data[closed_profit_nominal_headers].loc[i].sum().sum()
+        yahoo_data['closed_profit_rate_for_date'].loc[i] = 100 * (
+            yahoo_data['closed_closing_value_for_date'].loc[i] - yahoo_data['closed_initial_value_for_date'].loc[i]
+            ) / yahoo_data['closed_initial_value_for_date'].loc[i]
+
+        yahoo_data['total_initial_value_for_date'].loc[i] = yahoo_data[total_initial_value_headers].loc[i].sum().sum()
+        yahoo_data['total_closing_value_for_date'].loc[i] = yahoo_data[total_closing_value_headers].loc[i].sum().sum()
+        yahoo_data['total_profit_nominal_for_date'].loc[i] = yahoo_data[total_profit_nominal_headers].loc[i].sum().sum()
+        yahoo_data['total_profit_rate_for_date'].loc[i] = 100 * (
+            yahoo_data['total_closing_value_for_date'].loc[i] - yahoo_data['total_initial_value_for_date'].loc[i]
+            ) / yahoo_data['total_initial_value_for_date'].loc[i]
+
+
+    yahoo_data = yahoo_data[yahoo_data['BABA'].isnull()==False]
     return yahoo_data
 
 stocks_data = get_yahoo_data(

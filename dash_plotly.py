@@ -58,8 +58,8 @@ available_stocks = get_ticker_names(initial_stocks)
 final_stocks_data = pd.read_csv('mystocks.csv')
 
 investment_labels_pie = get_ticker_names(initial_stocks)
-investment_amount_pie= np.array(final_stocks_data[get_ticker_headers(initial_stocks, '_initial_total')].tail(1).iloc[0])
-current_amount_pie= np.array(final_stocks_data[get_ticker_headers(initial_stocks, '_current_total')].tail(1).iloc[0])
+investment_amount_pie= np.array(final_stocks_data[get_ticker_headers(initial_stocks, '_open_initial_value')].tail(1).iloc[0])
+current_amount_pie= np.array(final_stocks_data[get_ticker_headers(initial_stocks, '_open_closing_value')].tail(1).iloc[0])
 
 figP = px.pie(values=investment_amount_pie, names=investment_labels_pie)
 figP.update_traces(textposition='inside', textinfo='percent+label')
@@ -90,7 +90,7 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 
 all_stocks_dropdown = dcc.Dropdown(id='stock_name'
-        , options=[{'label': i, 'value': i} for i in available_stocks], value='SNOW', clearable=False
+        , options=[{'label': i, 'value': i} for i in available_stocks], value='BABA', clearable=False
                                   )
 
 amount_type_drop = dcc.Dropdown(
@@ -128,7 +128,16 @@ tickers = dbc.Checklist(
         value=['SNOW', 'BABA'],
         switch=True,
         inline = True,
-    ),
+    )
+
+
+position_types = dcc.Dropdown(
+    id="position_types_option_list",
+    options=[{"label": i, "value": i} for i in ['open', 'closed', 'both']],
+    value="open",
+    clearable=False,
+    className = 'text-dark',
+)
 
 tickers_option = dcc.Dropdown(
     id="tickers_option_list",
@@ -139,22 +148,76 @@ tickers_option = dcc.Dropdown(
 )
 
 
+card_content_tickers = [
+    dbc.CardHeader("Stocks"),
+    dbc.CardBody(
+        [
+            html.P(
+                "Choose the stock names for which you want to display the chart",
+                className="card-text",
+            ),
+            tickers
+        ]
+    ),
+]
 
+
+card_content_position_types = [
+    dbc.CardHeader("Position type"),
+    dbc.CardBody(
+        [
+            
+            html.P(
+                "Choose the type of positions: closed positions, open positions, or both.",
+                className="card-text",
+            ),
+            position_types
+        ]
+    ),
+]
+
+card_content_amount_type = [
+    dbc.CardHeader("Amount Type"),
+    dbc.CardBody(
+        [
+            
+            html.P(
+                "Choose the type of amount: nominal profit, or a percentage of profit",
+                className="card-text",
+            ),
+            amount_type_drop
+        ]
+    ),
+]
 
 row = html.Div(
     [
         dbc.Row(
-            [dbc.Col([dbc.Label("Select the stocks", className = 'text-dark'),
-                      html.Hr(),
-                dbc.Row([
-                    dbc.Col(tickers)
-                ]),]),
-                dbc.Col([dcc.Graph(id="single_stock")
-                    , dbc.Label('Select the type of profit', className = 'text-dark',), amount_type_drop], width = 10),
+            [
+                dbc.Col([
+                    dbc.Row([
+                        dbc.Col(dbc.Card(card_content_tickers, color="light", inverse=False))
+                        ]
+                        , className = "p-1"),
+   
+                    dbc.Row([
+                        dbc.Col(dbc.Card(card_content_position_types, color="light", inverse=False))
+                        ]
+                        , className = "p-1"),
+                    
+                    dbc.Row([
+                        dbc.Col(dbc.Card(card_content_amount_type, color="light", inverse=False))
+                        ]
+                        , className = "p-1")
+                    ]
+                ),
+                dbc.Col([dcc.Graph(id="single_stock")], width = 8),
                 ]
         ),
     ]
 )
+
+
 
 row1 = html.Div(
     [
@@ -253,13 +316,16 @@ app.layout = dbc.Container([
 @app.callback(
     Output('single_stock', 'figure'),
     [Input('ticker_checklist', 'value'),
-     Input('amount_nominal_percent', 'value')])
+     Input('amount_nominal_percent', 'value'),
+     Input('position_types_option_list', 'value')
+     ])
 
-def update_graph(_tickers1, _amount_type):
+def update_graph(_tickers1, _amount_type, _position_type):
     if _amount_type == 'Nominal':
-        column_suffix = '_profit_nominal'
+        column_suffix = '_open_profit_nominal'
     else:
-        column_suffix = '_profit_rate'
+        column_suffix = '_open_profit_rate'
+        
  
 
     fig = go.Figure()
@@ -270,7 +336,7 @@ def update_graph(_tickers1, _amount_type):
                             , name=loop_ticker))
     fig.update_layout(
     title={
-            'text': "Comparison of single stock profits over time",
+            'text': "Comparison of profits from active stocks over time",
             'x':0.5,
             'xanchor': 'center',
             'yanchor': 'top'},
@@ -291,10 +357,10 @@ def update_graph(_tickers1, _amount_type):
 def update_graph2(_ticker):
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=final_stocks_data['Date']
-                                 , y=final_stocks_data[_ticker + '_current_total']
+                                 , y=final_stocks_data[_ticker + '_open_closing_value']
                             , name= 'Current value', mode='lines', fill='tozeroy'))
     fig.add_trace(go.Scatter(x=final_stocks_data['Date']
-                                 , y=final_stocks_data[_ticker + '_initial_total']
+                                 , y=final_stocks_data[_ticker + '_open_initial_value']
                             , name='Initial investment value', mode='lines', fill='tozeroy'))
     
     fig.update_layout(
@@ -319,10 +385,10 @@ def update_graph2(_ticker):
 
 def update_graph3(_amount_type):
     if _amount_type=='Current':
-        col = 'current_value_for_date'
+        col = 'open_closing_value_for_date'
         plotname = 'Total current value of the stocks'
     else:
-        col = 'initial_value_for_date'
+        col = 'open_initial_value_for_date'
         plotname = 'Total initial investment value of the stocks'
     
     fig2 = go.Figure()
@@ -351,10 +417,10 @@ def update_graph3(_amount_type):
 
 def update_graph4(_amount_type):
     if _amount_type=='Percent':
-        col = 'profit_rate_for_date'
+        col = 'open_profit_rate_for_date'
         plotname = 'Total % of profit of all the stocks'
     else:
-        col = 'profit_nominal_for_date'
+        col = 'open_profit_nominal_for_date'
         plotname = 'Total amount of profit of all the stocks'
     fig2 = go.Figure()
     
