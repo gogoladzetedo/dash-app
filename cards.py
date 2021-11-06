@@ -17,7 +17,7 @@ def tickers_checklist(component_id):
         ],
         value=['SNOW', 'BABA'],
         switch=True,
-        inline = True,
+        inline = True
     )
 
 def tickers_option(component_id):
@@ -56,14 +56,16 @@ def position_value_type(component_id):
         className = 'text-dark',
     )
 
+### CARDS HERE ###
 
 def card_ticker_checklist(component):
     return [
-    dbc.CardHeader("Stocks"),
+    #dbc.CardHeader("Stocks"),
     dbc.CardBody(
         [
+            html.H5("Stocks", className="card-title"),
             html.P(
-                "Choose the stock names for which you want to display the chart",
+                "Choose the stock names for which you want to display the chart:",
                 className="card-text",
             ),
             tickers_checklist(component)
@@ -73,11 +75,11 @@ def card_ticker_checklist(component):
 
 def card_position_types(component):
     return [
-            dbc.CardHeader("Position type"),
             dbc.CardBody(
                 [
+                    html.H5("Past and Present", className="card-title"),
                     html.P(
-                        "Choose the type of positions: closed positions, open positions, or both.",
+                        "Choose type of positions: closed positions, open, or both.:",
                         className="card-text",
                     ),
                     position_types(component)
@@ -87,12 +89,11 @@ def card_position_types(component):
 
 def card_amount_type(component):
     return [
-        dbc.CardHeader("Amount Type"),
         dbc.CardBody(
             [
-                
+                html.H5("Amount / Rate", className="card-title"),
                 html.P(
-                    "Choose the type of amount: nominal profit, or a percentage of profit",
+                    "Choose the type of amount to show: nominal, or a percentage:",
                     className="card-text",
                 ),
                 amount_type_drop(component)
@@ -102,12 +103,11 @@ def card_amount_type(component):
 
 def card_position_value_type(component):
     return [
-        dbc.CardHeader("Position value type"),
         dbc.CardBody(
             [
-                
+                html.H5("Investment Value", className="card-title"),
                 html.P(
-                    "Choose the type of value of positions: Initial investment value, or a current/closing value",
+                    "Choose the type of value of positions: Initial investment value, or a current/closing value:",
                     className="card-text",
                 ),
                 position_value_type(component)
@@ -117,12 +117,11 @@ def card_position_value_type(component):
 
 def card_ticker_options(component):
     return [
-    dbc.CardHeader("Stock position"),
     dbc.CardBody(
         [
-            
+            html.H5("Stock", className="card-title"),
             html.P(
-                "Select the stock",
+                "Select the stock names for which you want to see the chart:",
                 className="card-text",
             ),
             tickers_option(component)
@@ -134,4 +133,9 @@ def empty_card(title):
     return [
         dbc.CardHeader(title),
         dbc.CardBody([]),
+    ]
+
+def graph_card(component_id):
+    return [
+        dbc.CardBody([dcc.Graph(id=component_id)]),
     ]

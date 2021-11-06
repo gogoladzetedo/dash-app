@@ -23,53 +23,29 @@ import interface as ifc
 available_stocks = d_f.get_ticker_names(d_f.initial_stocks)
 final_stocks_data = d_f.input_file('mystocks.csv')
 
+# lux was BEST so far.
+# materia also OK
+# darkly is ok, for dark
+# flatly and bootstrap is OK
+# sandstone is OK. gray and solid
+# sketchy is good but graphs are not matching the style
+# slate is ok, DARK
+# solar is dark and green. OK
+# superhero is dark gray and blue.
+# yeti
 
-load_figure_template("bootstrap")
-app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+load_figure_template("lux")
+figure_tmeplate = "lux" 
+app = Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 
 
 app.title = "Stocks by T.G."
-app.layout = dbc.Container([
-    
-    html.H2("Comparison of stock profits over time"
-            , className="bg-dark text-white text-center p-3"),
-    
-    dbc.Container([
-        ifc.row,
-        html.Hr(),
-    ], fluid=True, className = "p-1"),
 
-
-    # Chart 2
-    html.H2("Performance of stock over time - Initial investment value vs Current value"
-            , className="bg-dark text-white text-center p-3"),
+app.layout = dbc.Container([ 
     
-    dbc.Container([
-        ifc.row1,
-        html.Hr(),
-    ], fluid=True, className = "p-1"),
-
-
+    html.H2("Stock Portfolio Dashboard", className="bg-dark text-white text-center p-3"),
     
-    html.Br(),
-    html.H2("Summary of results of all stocks together"
-            , className="bg-dark text-white text-center p-3 rounded-top"),
-    
-    dbc.Container([
-        ifc.row2, 
-        html.Hr()
-    ], fluid=True, className = "p-1"),
-    
-    html.Br(),
-    html.H2("Share of stocks"
-            , className="bg-dark text-white text-center p-3 rounded-top"),
-    
-    dbc.Container([
-        ifc.row3,
-        html.Hr(),
-    ], fluid=True, className = "p-1"),
-    
-    html.Hr(),
+    dbc.Col(ifc.tabs, width=12, className="mt-4"),
     
 ], fluid=True, className = "container-md")
 
@@ -107,7 +83,7 @@ def update_graph(_tickers1, _amount_type, _position_type):
                                  , y=final_stocks_data[loop_ticker + col_suffix_position + col_suffix_metric + col_suffix_amount]
                             , name=loop_ticker))
     fig.update_layout(
-        template = 'plotly_white',
+        template = figure_tmeplate,
         title={
                 'text': 'Comparison of profits from ' + graph_title + ' over time',
                 'x':0.5,
@@ -147,7 +123,7 @@ def update_graph2(_ticker, _position_type):
                             , name='Initial investment value', mode='lines', fill='tozeroy', marker_color='#e74c3c'))
     
     fig.update_layout(
-        template = 'plotly_white',
+        template = figure_tmeplate,
         title={
             'text': 'Comparison of ' + graph_title + ' values over time',
             'x':0.5,
@@ -186,7 +162,7 @@ def update_graph3(_position_type):
                             , name='Initial investment', mode='lines', fill='tozeroy', marker_color='#e74c3c'
                               ))
     fig2.update_layout(
-        template = 'plotly_white',
+        template = figure_tmeplate,
         xaxis_title="Date", yaxis_title="Amount (USD)",
         font=dict(family="Lato", size=14),
         title={
@@ -238,7 +214,7 @@ def update_graph4(_amount_type, _position_type):
                               marker_color='#e74c3c', name = 'Total loss'
                               ))
     fig2.update_layout(
-        template = 'plotly_white',
+        template = figure_tmeplate,
         xaxis_title="Date", yaxis_title="Amount (USD)" if _amount_type !='Percent' else 'Percent %',
         font=dict(family="Lato", size=14),
         title={
@@ -287,9 +263,9 @@ def update_graph5(_position_type, _position_value_type):
     fig.update_traces(textposition='inside', textinfo='percent+label')
     fig.update_layout(uniformtext_minsize=12, uniformtext_mode='hide',
                     font=dict(family="Lato", size=14),
-                    template = 'plotly_white',
+                    template = figure_tmeplate,
                     title={
-                        'text': 'Investment Amounts: ' + graph_title,
+                        'text': graph_title,
                         'x':0.4,
                         'xanchor': 'center',
                         'yanchor': 'top'}, )

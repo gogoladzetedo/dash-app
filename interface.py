@@ -24,24 +24,23 @@ final_stocks_data_last_rec = d_f.input_file('mystocks.csv').tail(1).copy()
 
 
 
-row = html.Div(
+row1 = html.Div(
     [
         dbc.Row(
             [
                 dbc.Col([
                     dbc.Row([
-                        dbc.Col(dbc.Card(crd.card_ticker_checklist('ticker_checklist') , color="light", outline=False))
+                        dbc.Col(dbc.Card(crd.card_ticker_checklist('ticker_checklist') , className="shadow-sm"))
                         ]
                         , className = "p-1"),
    
                     dbc.Row([
-                        dbc.Col(dbc.Card(crd.card_position_types('position_types_option_list')
-                        , color="light", outline=False))
+                        dbc.Col(dbc.Card(crd.card_position_types('position_types_option_list'),  className="shadow-sm"))
                         ]
                         , className = "p-1"),
                     
                     dbc.Row([
-                        dbc.Col(dbc.Card(crd.card_amount_type('amount_nominal_percent') , color="light", outline=False))
+                        dbc.Col(dbc.Card(crd.card_amount_type('amount_nominal_percent') , className="shadow-sm"))
                         ]
                         , className = "p-1")
                     ]
@@ -49,8 +48,7 @@ row = html.Div(
                 dbc.Col(
                     dbc.Row([
                         dbc.Col([
-                            dbc.Card(crd.empty_card('Profits over time') , color="light", outline=True),
-                            dcc.Graph(id="single_stock")
+                            dbc.Col(dbc.Card(crd.graph_card('single_stock') , className="shadow-sm"))
                             ])
                         ]
                         , className = "p-1"
@@ -62,20 +60,19 @@ row = html.Div(
     ]
 )
 
-row1 = html.Div([
+row2 = html.Div([
     dbc.Row([
 
         dbc.Col([
 
             dbc.Row([
-                dbc.Col(dbc.Card(crd.card_ticker_options('tickers_option_list') , color="light", outline=False))
+                dbc.Col(dbc.Card(crd.card_ticker_options('tickers_option_list'), className="shadow-sm"))
                 ], className = "p-1"
             ),
 
             dbc.Row([
                 dbc.Col(dbc.Card(
-                    crd.card_position_types('position_types_option_list_2'), 
-                    color="light", outline=False))
+                    crd.card_position_types('position_types_option_list_2'), className="shadow-sm"))
                 ], className = "p-1"
             ),
             
@@ -83,8 +80,7 @@ row1 = html.Div([
         dbc.Col(
             dbc.Row([
                 dbc.Col([
-                    dbc.Card(crd.empty_card('Position value over time') , color="light", outline=True),
-                    dcc.Graph(id="single_stock2")
+                    dbc.Col(dbc.Card(crd.graph_card('single_stock2') , className="shadow-sm"))
                     ])
                 ]
                 , className = "p-1"
@@ -94,52 +90,56 @@ row1 = html.Div([
     ]),
 ])
 
-row2 = html.Div([
-    dbc.Row([
-
-        dbc.Col([
-
-            dbc.Row([
-                dbc.Col(dbc.Card(crd.card_position_types('position_types_option_list_3') , color="light", outline=False))
-                ], className = "p-1"
-            ),
-
-            dbc.Row([
-                dbc.Col(dbc.Card(
-                    crd.card_amount_type('amount_nominal_percent_2'), 
-                    color="light", outline=False))
-                ], className = "p-1"
-            ),
-            
-        ]),
-        dbc.Col(
-            dbc.Row([
-                dbc.Col([
-                    dcc.Graph(id="total_amounts_plot1"),
-                    dcc.Graph(id="total_amounts_plot2")
-                    ])
-                ]
-                , className = "p-1"
-            )
-            , width = 9
-        ),
-    ]),
-])
-
 row3 = html.Div([
     dbc.Row([
 
         dbc.Col([
+            
+            
+            dbc.Row([
+                dbc.Col(dbc.Card(crd.card_position_types('position_types_option_list_3'), className="shadow-sm"))
+                ], className = "p-1"
+            ) 
+            , dbc.Row([
+                dbc.Col(dbc.Card(
+                    crd.card_amount_type('amount_nominal_percent_2'), className="shadow-sm"))
+                ], className = "p-1"
+            )
+            
+        ]),
+        
+        dbc.Col([
+            dbc.Row([
+                dbc.Col([
+                    dbc.Col(dbc.Card(crd.graph_card('total_amounts_plot1') , className="shadow-sm"))
+                    ])
+                ], className = "p-1"
+                
+            )
+            , dbc.Row([
+                dbc.Col([
+                    dbc.Col(dbc.Card(crd.graph_card('total_amounts_plot2') , className="shadow-sm"))
+                    ])
+                ], className = "p-1")
+        ]
+            , width = 8
+        )
+    ]),
+])
+
+row4 = html.Div([
+    dbc.Row([
+
+        dbc.Col([
 
             dbc.Row([
-                dbc.Col(dbc.Card(crd.card_position_types('position_types_option_list_4') , color="light", outline=False))
+                dbc.Col(dbc.Card(crd.card_position_types('position_types_option_list_4'), className="shadow-sm"))
                 ], className = "p-1"
             ),
 
             dbc.Row([
                 dbc.Col(dbc.Card(
-                    crd.card_position_value_type('position_value_types_option_list'), 
-                    color="light", outline=False))
+                    crd.card_position_value_type('position_value_types_option_list'), className="shadow-sm"))
                 ], className = "p-1"
             ),
             
@@ -147,12 +147,25 @@ row3 = html.Div([
         dbc.Col(
             dbc.Row([
                 dbc.Col([
-                    dcc.Graph(id="total_values_pie")
+                    dbc.Col(dbc.Card(crd.graph_card('total_values_pie') , className="shadow-sm"))
                     ])
                 ]
                 , className = "p-1"
             )
-            , width = 9
+            , width = 8
         ),
     ]),    
 ])
+
+
+
+tabs = dbc.Tabs(
+    [
+        dbc.Tab(row1, tab_id="row1", label="Stock profits comparison"),
+        dbc.Tab(row2, tab_id="row2", label="Performance of a single stock"),
+        dbc.Tab(row3, tab_id="row3", label="Summary of the whole portfolio"),
+        dbc.Tab(row4, tab_id="row4", label="Share of stocks"),
+    ],
+    id="tabs",
+    active_tab="row1"
+)
