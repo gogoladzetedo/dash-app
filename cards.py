@@ -11,11 +11,8 @@ available_stocks = data_functions.get_ticker_names(data_functions.initial_stocks
 def tickers_checklist(component_id):
     return dbc.Checklist(
         id=component_id,
-        options=[
-             {"label": "{}".format(i), "value": i}
-            for i in available_stocks
-        ],
-        value=['SNOW', 'BABA'],
+        options=[{"label": "{}".format(i), "value": i} for i in available_stocks],
+        #value=['SNOW', 'BABA'],
         switch=True,
         inline = True
     )
@@ -24,10 +21,10 @@ def tickers_option(component_id):
     return dcc.Dropdown(
         id=component_id,
         options=[{"label": i, "value": i} for i in available_stocks],
-        value="SNOW",
+        #value="SNOW",
         clearable=False,
         className = 'text-dark',
-)
+    )
 
 def position_types(component_id):
     return dcc.Dropdown(
@@ -56,78 +53,75 @@ def position_value_type(component_id):
         className = 'text-dark',
     )
 
+def profit_or_amount_option(component_id):
+    return dcc.Dropdown(
+        id=component_id,
+        options=[{"label": i, "value": i} for i in ['Profits', 'Investments']],
+        value="Investments",
+        clearable=False,
+        className = 'text-dark',
+    )
+
 ### CARDS HERE ###
 
 def card_ticker_checklist(component):
     return [
-    #dbc.CardHeader("Stocks"),
-    dbc.CardBody(
-        [
+        dbc.CardBody([
             html.H5("Stocks", className="card-title"),
             html.P(
                 "Choose the stock names for which you want to display the chart:",
                 className="card-text",
             ),
             tickers_checklist(component)
-        ]
-    ),
-]
+        ])
+    ]
 
 def card_position_types(component):
     return [
-            dbc.CardBody(
-                [
-                    html.H5("Past and Present", className="card-title"),
-                    html.P(
-                        "Choose type of positions: closed positions, open, or both.:",
-                        className="card-text",
-                    ),
-                    position_types(component)
-                ]
-            ),
-        ]
+        dbc.CardBody([
+            html.H5("Past and Present", className="card-title"),
+            html.P("Choose type of positions: closed positions, open, or both.:", className="card-text"),
+            position_types(component)
+        ]),
+    ]
 
 def card_amount_type(component):
     return [
-        dbc.CardBody(
-            [
-                html.H5("Amount / Rate", className="card-title"),
-                html.P(
-                    "Choose the type of amount to show: nominal, or a percentage:",
-                    className="card-text",
-                ),
-                amount_type_drop(component)
-            ]
-        ),
+        dbc.CardBody([
+            html.H5("Amount / Rate", className="card-title"),
+            html.P("Choose the type of amount to show: nominal, or a percentage:", className="card-text"),
+            amount_type_drop(component)
+        ]),
     ]
 
 def card_position_value_type(component):
     return [
-        dbc.CardBody(
-            [
-                html.H5("Investment Value", className="card-title"),
-                html.P(
-                    "Choose the type of value of positions: Initial investment value, or a current/closing value:",
-                    className="card-text",
-                ),
-                position_value_type(component)
-            ]
-        ),
+        dbc.CardBody([
+            html.H5("Investment Value", className="card-title"),
+            html.P("Choose the type of value of positions: Initial investment value, or a current/closing value:"
+                ,className="card-text"),
+            position_value_type(component)
+        ]),
     ]
 
 def card_ticker_options(component):
     return [
-    dbc.CardBody(
-        [
+        dbc.CardBody([
             html.H5("Stock", className="card-title"),
-            html.P(
-                "Select the stock names for which you want to see the chart:",
-                className="card-text",
-            ),
+            html.P("Select the stock names for which you want to see the chart:", className="card-text"),
             tickers_option(component)
-        ]
-    ),
-]
+        ]),
+    ]
+
+def card_profit_or_amount_option(component):
+    return [
+        dbc.CardBody([
+            html.H5("Profit / Investment", className="card-title"),
+            html.P("Select the metric to output on the graph:", className="card-text"),
+            profit_or_amount_option(component)
+        ]),
+    ]
+
 
 def empty_card(title):
     return [
@@ -136,6 +130,34 @@ def empty_card(title):
     ]
 
 def graph_card(component_id):
+    return [dbc.CardBody([dcc.Graph(id=component_id)])]
+
+
+def card_input_data():
     return [
-        dbc.CardBody([dcc.Graph(id=component_id)]),
+        dbc.CardBody([
+            html.H5("Purchase / Sell", className="card-title"),
+            html.P("add the details of each trade operation separately. For sell operations add minus sign before quantity."
+            , className="card-text"),
+            
+            dbc.Col(dcc.Input(id='stock-name', type='text', placeholder = 'Name of stock ticker'
+            , className = 'text-dark form-control m-1')),
+            dbc.Col(dcc.Input(id='stock-buy-date', type='text', placeholder = 'Date of the operation'
+            , className = 'text-dark form-control m-1')),
+            dbc.Col(dcc.Input(id='stock-price', type='number', placeholder = 'Price of single stock'
+            , className = 'text-dark form-control m-1')),
+            dbc.Col(dcc.Input(id='stock-amount', type='number', placeholder = 'Number of stock'
+            , className = 'text-dark form-control m-1')),
+            dbc.Col(html.Div(id='stocks-array', children="array will appear here"
+            , className = 'text-dark m-1')),
+            dbc.Col(html.Button('Add', id='submit-val', n_clicks=0
+            , className = 'text-dark btn btn-secondary m-1 border-bottom')),
+            dbc.Col(html.Div(id='container-button-basic', children='Enter a value and press submit'
+            , className = 'text-dark m-1')),
+
+            dbc.Col(html.Button('Load data and calculate', id='data-load', n_clicks=0
+            , className = 'text-dark btn btn-secondary m-1')),
+            dbc.Col(html.Div(id='load-output-area', children='Enter a value and press submit'
+            , className = 'text-dark m-1')),
+        ])
     ]

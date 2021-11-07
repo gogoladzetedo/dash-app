@@ -6,25 +6,6 @@ from pandas_datareader import data
 from datetime import date
 
 
-initial_stocks = {
-    'SNOW': [{'price': 334.84, 'quantity': 0.153, 'value': 51.41, 'date': '2020-12-24', 'is_empty': 0},
-             {'price': 215.19, 'quantity': 4, 'value': 860, 'date': '2021-03-25', 'is_empty': 0}],
-    'BABA': [{'price': 275.0, 'quantity': 5, 'value': 1375,'date': '2020-11-25', 'is_empty': 0},
-             {'price': 200, 'quantity': 2, 'value': 400, 'date': '2021-07-08', 'is_empty': 0},
-             {'price': 280, 'quantity': -5, 'value': -1400, 'date': '2021-07-15', 'is_empty': 0}],
-   
-    'BIDU': [{'price': 213.38, 'quantity': 1.3, 'value': 277.84, 'date': '2021-03-25', 'is_empty': 0}],
-    'NNDM': [{'price': 9.26, 'quantity': 7.45, 'value': 69, 'date': '2020-12-24', 'is_empty': 0},
-             {'price': 10.62, 'quantity': 4.72, 'value': 50, 'date': '2021-02-25', 'is_empty': 0},
-             {'price': 8.72, 'quantity': 34.4, 'value': 300, 'date': '2021-03-25', 'is_empty': 0},
-             {'price': 12.00, 'quantity': -30.00, 'value': -360.00, 'date': '2021-04-01', 'is_empty': 0},
-             {'price': 6.97, 'quantity': 33.92, 'value': 236.45, 'date': '2021-04-15', 'is_empty': 0},
-             {'price': 5.00, 'quantity': -30.00, 'value': -150.00, 'date': '2021-04-19', 'is_empty': 0},
-             {'price': 6.97, 'quantity': 33.92, 'value': 236.45, 'date': '2021-04-27', 'is_empty': 0}],
-    'FSLR': [{'price': 74.98, 'quantity': 2.67, 'value': 200, 'date': '2021-03-04', 'is_empty': 0}]
-}
-
-
 def get_min_date(obj):
     '''
     returns the earliest date when the transaction was made, i.e. first date in the input dictionary
@@ -280,16 +261,17 @@ def calc_daily_sums(yahoo_data, initial_data):
             ) / yahoo_data['total_initial_value_for_date'].loc[i]
 
 
-    yahoo_data = yahoo_data[yahoo_data['BABA'].isnull()==False]
+    yahoo_data = yahoo_data[yahoo_data['MSFT'].isnull()==False]
     return yahoo_data
 
-stocks_data = get_yahoo_data(
-      get_ticker_names(initial_stocks)
-    , get_min_date(initial_stocks)
-    , date.today())
 
-stocks_data_calc = update_yahoo_data(stocks_data, initial_stocks)
+def run_data_load(_initial_stocks):
+    stocks_data = get_yahoo_data(
+        get_ticker_names(_initial_stocks)
+        , get_min_date(_initial_stocks)
+        , date.today())
 
-final_stocks_data = calc_daily_sums(stocks_data_calc, initial_stocks)
-final_stocks_data.to_csv('mystocks.csv')
+    stocks_data_calc = update_yahoo_data(stocks_data, _initial_stocks)
+    final_stocks_data = calc_daily_sums(stocks_data_calc, _initial_stocks)
+    final_stocks_data.to_csv('mystocks.csv')
 

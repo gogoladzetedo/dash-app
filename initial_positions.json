@@ -1,0 +1,34 @@
+{
+    "BABA": [
+        {
+            "date": "13-10-2020",
+            "is_empty": 0,
+            "price": 290,
+            "quantity": 10,
+            "value": 2900
+        }
+    ],
+    "MSFT": [
+        {
+            "date": "15-10-2020",
+            "is_empty": 0,
+            "price": 330,
+            "quantity": 20,
+            "value": 6600
+        },
+        {
+            "date": "19-10-2020",
+            "is_empty": 0,
+            "price": 240,
+            "quantity": 30,
+            "value": 7200
+        },
+        {
+            "date": "30-10-2020",
+            "is_empty": 0,
+            "price": 35,
+            "quantity": 250,
+            "value": 8750
+        }
+    ]
+}

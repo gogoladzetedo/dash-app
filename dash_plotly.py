@@ -42,13 +42,9 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 app.title = "Stocks by T.G."
 
 app.layout = dbc.Container([ 
-    
     html.H2("Stock Portfolio Dashboard", className="bg-dark text-white text-center p-3"),
-    
     dbc.Col(ifc.tabs, width=12, className="mt-4"),
-    
 ], fluid=True, className = "container-md")
-
 
 # Chart 1 - update by selecting stock tickers and choosing Nominal/Percent   
 @app.callback(
@@ -140,9 +136,12 @@ def update_graph2(_ticker, _position_type):
 
 @app.callback(
     Output('total_amounts_plot1', 'figure'),
-    Input('position_types_option_list_3', 'value'))
+    [Input('position_types_option_list_3', 'value'),
+     Input('amount_profit_investment', 'value'),
+     Input('amount_nominal_percent_2', 'value')])
 
-def update_graph3(_position_type):
+def update_graph3(_position_type, _profit_investment, _amount_type):
+    # Both graphs
     if _position_type == 'open':
         col_suffix_position = 'open'
         graph_title = 'open position stocks'
@@ -153,45 +152,7 @@ def update_graph3(_position_type):
         col_suffix_position = 'total'
         graph_title = 'both, open and closed position stocks'
 
-    fig2 = go.Figure()
-    fig2.add_trace(go.Scatter(x=final_stocks_data['Date'], y=final_stocks_data[col_suffix_position + '_closing_value_for_date']
-                            , name='Closing/current value', mode='lines', fill='tozeroy', marker_color='#18bc9c'
-                              ))
-
-    fig2.add_trace(go.Scatter(x=final_stocks_data['Date'], y=final_stocks_data[col_suffix_position + '_initial_value_for_date']
-                            , name='Initial investment', mode='lines', fill='tozeroy', marker_color='#e74c3c'
-                              ))
-    fig2.update_layout(
-        template = figure_tmeplate,
-        xaxis_title="Date", yaxis_title="Amount (USD)",
-        font=dict(family="Lato", size=14),
-        title={
-            'text': 'Total amount of ' + graph_title + ' over time',
-            'x':0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'},
-        )
-    fig2.update_layout(legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01)
-    )
-    return fig2
-
-
-@app.callback(
-    Output('total_amounts_plot2', 'figure'),
-    [Input('amount_nominal_percent_2', 'value'),
-     Input('position_types_option_list_3', 'value')])
-
-def update_graph4(_amount_type, _position_type):
-    if _position_type == 'open':
-        col_suffix_position = 'open'
-        graph_title = 'open position stocks'
-    elif _position_type == 'closed':
-        col_suffix_position = 'closed'
-        graph_title = 'closed position stocks'
-    else:
-        col_suffix_position = 'total'
-        graph_title = 'both, open and closed position stocks'
-
+    ## Only graph 2
     col_suffix_metric = '_profit'
 
     if _amount_type == 'Nominal':
@@ -200,32 +161,55 @@ def update_graph4(_amount_type, _position_type):
         col_suffix_amount = '_rate'
 
     col = col_suffix_position + col_suffix_metric + col_suffix_amount + '_for_date'
-   
-    fig2 = go.Figure()
-    pos_data = final_stocks_data[final_stocks_data[col]>=0]
-    neg_data = final_stocks_data[final_stocks_data[col]<0]
-    
-    fig2.add_trace(go.Bar(x=pos_data['Date'], y=pos_data[col]
-                            ,  #mode='bar', fill='tozeroy', 
-                          marker_color='#18bc9c', name = 'Total profit'
-                              ))
-    fig2.add_trace(go.Bar(x=neg_data['Date'], y=neg_data[col]
-                            , #mode='bar', fill='tozeroy', 
-                              marker_color='#e74c3c', name = 'Total loss'
-                              ))
-    fig2.update_layout(
-        template = figure_tmeplate,
-        xaxis_title="Date", yaxis_title="Amount (USD)" if _amount_type !='Percent' else 'Percent %',
-        font=dict(family="Lato", size=14),
-        title={
-            'text': 'Total profit of ' + graph_title + 'stocks over time',
-            'x':0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'},
-    )
-    fig2.update_layout(showlegend=False)
-    
-    return fig2
+
+
+    if _profit_investment == 'Investments':
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=final_stocks_data['Date'], y=final_stocks_data[col_suffix_position + '_closing_value_for_date']
+                                , name='Closing/current value', mode='lines', fill='tozeroy', marker_color='#18bc9c'
+                                ))
+
+        fig.add_trace(go.Scatter(x=final_stocks_data['Date'], y=final_stocks_data[col_suffix_position + '_initial_value_for_date']
+                                , name='Initial investment', mode='lines', fill='tozeroy', marker_color='#e74c3c'
+                                ))
+        fig.update_layout(
+            template = figure_tmeplate,
+            xaxis_title="Date", yaxis_title="Amount (USD)",
+            font=dict(family="Lato", size=14),
+            title={
+                'text': 'Total amount of ' + graph_title + ' over time',
+                'x':0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'},
+            )
+        fig.update_layout(legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01)
+        )
+    else:
+        fig = go.Figure()
+        pos_data = final_stocks_data[final_stocks_data[col]>=0]
+        neg_data = final_stocks_data[final_stocks_data[col]<0]
+        
+        fig.add_trace(go.Bar(x=pos_data['Date'], y=pos_data[col]
+                                ,  #mode='bar', fill='tozeroy', 
+                            marker_color='#18bc9c', name = 'Total profit'
+                                ))
+        fig.add_trace(go.Bar(x=neg_data['Date'], y=neg_data[col]
+                                , #mode='bar', fill='tozeroy', 
+                                marker_color='#e74c3c', name = 'Total loss'
+                                ))
+        fig.update_layout(
+            template = figure_tmeplate,
+            xaxis_title="Date", yaxis_title="Amount (USD)" if _amount_type !='Percent' else 'Percent %',
+            font=dict(family="Lato", size=14),
+            title={
+                'text': 'Total profit of ' + graph_title + ' over time',
+                'x':0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'},
+        )
+        fig.update_layout(showlegend=False)
+
+    return fig
 
 
 @app.callback(

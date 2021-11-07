@@ -95,8 +95,12 @@ row3 = html.Div([
 
         dbc.Col([
             
-            
             dbc.Row([
+                dbc.Col(dbc.Card(
+                    crd.card_profit_or_amount_option('amount_profit_investment'), className="shadow-sm"))
+                ], className = "p-1"
+            )
+            , dbc.Row([
                 dbc.Col(dbc.Card(crd.card_position_types('position_types_option_list_3'), className="shadow-sm"))
                 ], className = "p-1"
             ) 
@@ -105,6 +109,7 @@ row3 = html.Div([
                     crd.card_amount_type('amount_nominal_percent_2'), className="shadow-sm"))
                 ], className = "p-1"
             )
+            
             
         ]),
         
@@ -116,11 +121,6 @@ row3 = html.Div([
                 ], className = "p-1"
                 
             )
-            , dbc.Row([
-                dbc.Col([
-                    dbc.Col(dbc.Card(crd.graph_card('total_amounts_plot2') , className="shadow-sm"))
-                    ])
-                ], className = "p-1")
         ]
             , width = 8
         )
@@ -156,8 +156,6 @@ row4 = html.Div([
         ),
     ]),    
 ])
-
-
 
 tabs = dbc.Tabs(
     [
