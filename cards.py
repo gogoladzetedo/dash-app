@@ -6,7 +6,7 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 import data_functions
 
-available_stocks = data_functions.get_ticker_names(data_functions.initial_stocks)
+available_stocks = data_functions.get_ticker_names(data_functions.initial_stocks())
 
 def tickers_checklist(component_id):
     return dbc.Checklist(
@@ -142,22 +142,20 @@ def card_input_data():
             
             dbc.Col(dcc.Input(id='stock-name', type='text', placeholder = 'Name of stock ticker'
             , className = 'text-dark form-control m-1')),
-            dbc.Col(dcc.Input(id='stock-buy-date', type='text', placeholder = 'Date of the operation'
+            dbc.Col(dcc.Input(id='stock-buy-date', type='text', placeholder = 'Date of the operation in DD-MM-YYYY format.'
             , className = 'text-dark form-control m-1')),
             dbc.Col(dcc.Input(id='stock-price', type='number', placeholder = 'Price of single stock'
             , className = 'text-dark form-control m-1')),
             dbc.Col(dcc.Input(id='stock-amount', type='number', placeholder = 'Number of stock'
             , className = 'text-dark form-control m-1')),
-            dbc.Col(html.Div(id='stocks-array', children="array will appear here"
-            , className = 'text-dark m-1')),
-            dbc.Col(html.Button('Add', id='submit-val', n_clicks=0
-            , className = 'text-dark btn btn-secondary m-1 border-bottom')),
-            dbc.Col(html.Div(id='container-button-basic', children='Enter a value and press submit'
+            dbc.Col(html.Button('Add operation', id='submit-val', n_clicks=0
+            , className = 'text-dark btn btn-success m-1 border-bottom')),
+            dbc.Col(html.Pre(id='container-button-basic', children='Enter values and press "Add" button '
             , className = 'text-dark m-1')),
 
             dbc.Col(html.Button('Load data and calculate', id='data-load', n_clicks=0
-            , className = 'text-dark btn btn-secondary m-1')),
-            dbc.Col(html.Div(id='load-output-area', children='Enter a value and press submit'
+            , className = 'text-dark btn btn-success m-1 border-bottom')),
+            dbc.Col(html.Div(id='load-output-area', children='Click "Load and Calculate" once you are done with entering oeprations.'
             , className = 'text-dark m-1')),
         ])
     ]

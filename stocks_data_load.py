@@ -260,8 +260,8 @@ def calc_daily_sums(yahoo_data, initial_data):
             yahoo_data['total_closing_value_for_date'].loc[i] - yahoo_data['total_initial_value_for_date'].loc[i]
             ) / yahoo_data['total_initial_value_for_date'].loc[i]
 
-
-    yahoo_data = yahoo_data[yahoo_data['MSFT'].isnull()==False]
+    first_ticker = get_ticker_names(initial_data)[0]
+    yahoo_data = yahoo_data[yahoo_data[first_ticker].isnull()==False]
     return yahoo_data
 
 

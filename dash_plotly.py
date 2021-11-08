@@ -1,8 +1,10 @@
+from numpy.core.numeric import NaN
 import pandas_datareader
 pandas_datareader.__version__
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import numpy as np
 import plotly.graph_objects as go
+import json
 
 
 import plotly.express as px
@@ -16,11 +18,11 @@ import stocks_data_load
 
 # local functions
 import data_functions as d_f
-import cards as crd
 import interface as ifc
+import stocks_data_load as sdl
 
 
-available_stocks = d_f.get_ticker_names(d_f.initial_stocks)
+available_stocks = d_f.get_ticker_names(d_f.initial_stocks())
 final_stocks_data = d_f.input_file('mystocks.csv')
 
 # lux was BEST so far.
@@ -39,12 +41,25 @@ figure_tmeplate = "lux"
 app = Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 
 
-app.title = "Stocks by T.G."
+app.title = "BI Stocks by T.G."
 
-app.layout = dbc.Container([ 
-    html.H2("Stock Portfolio Dashboard", className="bg-dark text-white text-center p-3"),
-    dbc.Col(ifc.tabs, width=12, className="mt-4"),
-], fluid=True, className = "container-md")
+def serve_layout(): 
+    return dbc.Container([ 
+        html.H2("Stock Portfolio Dashboard", className="bg-dark text-white text-center p-3"),
+        dbc.Col(ifc.tabs, width=12, className="mt-4"),
+    ], fluid=True, className = "container-md")
+
+app.layout = serve_layout()
+
+
+@app.callback(
+    Output('row1', 'value'),
+    Input('tabs', 'value')
+)
+def update_tab1(_tab_content):
+    app.layout = serve_layout()
+    return ifc.row1
+        
 
 # Chart 1 - update by selecting stock tickers and choosing Nominal/Percent   
 @app.callback(
@@ -236,9 +251,9 @@ def update_graph5(_position_type, _position_value_type):
         col_suffix_value = '_closing_value'
         graph_title = graph_title + ', current/closing value'
 
-    cols = d_f.get_ticker_headers(d_f.initial_stocks, (col_suffix_position + col_suffix_value))
+    cols = d_f.get_ticker_headers(d_f.initial_stocks(), (col_suffix_position + col_suffix_value))
    
-    investment_labels_pie = d_f.get_ticker_names(d_f.initial_stocks)
+    investment_labels_pie = d_f.get_ticker_names(d_f.initial_stocks())
     investment_amount_pie= np.array(ifc.final_stocks_data_last_rec[cols].iloc[0])
     
     fig = go.Figure()
@@ -253,8 +268,79 @@ def update_graph5(_position_type, _position_value_type):
                         'x':0.4,
                         'xanchor': 'center',
                         'yanchor': 'top'}, )
-    
     return fig
+
+
+### Functionality for the input data ###
+all_stocks = {}
+
+@app.callback(
+    Output('container-button-basic', 'children'),
+
+    Output('stock-name', 'value'),
+    Output('stock-buy-date', 'value'),
+    Output('stock-price', 'value'),
+    Output('stock-amount', 'value'),
+
+    Input('submit-val', 'n_clicks'),
+    State('stock-name', 'value'),
+    State('stock-buy-date', 'value'),
+    State('stock-price', 'value'),
+    State('stock-amount', 'value'),
+    State('container-button-basic', 'children')
+)
+def update_output(n_clicks, name, date, price, amount, text):
+    if (name is not None 
+        and date is not None
+        and price is not None
+        and amount is not None 
+        and n_clicks > 0):
+        
+            
+        current_stock = {}
+        current_stock['price'] = price
+        current_stock['quantity'] = amount
+        if price is None:
+            price = 0
+        if amount is None:
+            amount = 0
+        current_stock['value'] = price * amount
+        current_stock['date'] = date
+        current_stock['is_empty'] = 0
+
+        if name in all_stocks:
+            added_current_stock = all_stocks[name].copy()
+            added_current_stock.append(current_stock)
+        else:
+            added_current_stock = []
+            added_current_stock.append(current_stock)
+        all_stocks[name] = added_current_stock
+
+        if amount < 0:
+            oprtation_type='Sold'
+        else:  
+            oprtation_type='Purchased'
+
+        current_operations_txt = oprtation_type + ' {} items of "{}" stock, on {} each priced as {}'.format(
+            amount, name, date, price, n_clicks)
+        text = text + ' \n ' + current_operations_txt
+    
+    return text, '', '', NaN, NaN
+
+@app.callback(
+    Output('load-output-area', 'children'),
+    Input('data-load', 'n_clicks')
+)
+def calcualte_data(n_clicks):
+    if n_clicks > 0:
+
+        sdl.run_data_load(all_stocks)
+        
+
+        with open('initial_positions.json', 'w') as fp:
+            json.dump(all_stocks, fp, sort_keys=True, indent=4)
+        return 'Data Load has been Completed!'
+
 
 
 app.run_server(debug=False, host='0.0.0.0', port = 80)

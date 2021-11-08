@@ -19,7 +19,7 @@ import data_functions as d_f
 import cards as crd
 
 
-available_stocks = d_f.get_ticker_names(d_f.initial_stocks)
+available_stocks = d_f.get_ticker_names(d_f.initial_stocks())
 final_stocks_data_last_rec = d_f.input_file('mystocks.csv').tail(1).copy()
 
 
@@ -157,13 +157,21 @@ row4 = html.Div([
     ]),    
 ])
 
+
+row_input = html.Div([
+        dbc.Col(crd.card_input_data()
+            , className="mt-4")]) 
+
+
 tabs = dbc.Tabs(
     [
+        dbc.Tab(row_input, tab_id="row_input", label="Add your portfolio"),
         dbc.Tab(row1, tab_id="row1", label="Stock profits comparison"),
         dbc.Tab(row2, tab_id="row2", label="Performance of a single stock"),
         dbc.Tab(row3, tab_id="row3", label="Summary of the whole portfolio"),
         dbc.Tab(row4, tab_id="row4", label="Share of stocks"),
+        
     ],
     id="tabs",
-    active_tab="row1"
+    active_tab="row_input"
 )

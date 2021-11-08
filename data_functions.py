@@ -24,7 +24,9 @@ def input_file(filename):
     return pd.read_csv(filename)
 
 
-with open('initial_positions.json') as json_file:
-    init_file = json.load(json_file)
-  
-initial_stocks = init_file
+
+def initial_stocks():
+    with open('initial_positions.json') as json_file:
+        init_file = json.load(json_file)
+    return init_file
+
