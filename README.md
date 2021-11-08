@@ -9,7 +9,8 @@ shows the metrics in the context of open or closed positions together and separa
 
 ### Installation:
 It is strongly recommended to create a python virtual environment: 
-* `python -m venv DashVenv`
+* ```python -m venv DashVenv```
+
 Activate virtual environment:
 * Mac/Linux: ```source DashVenv/bin/activate```
 * Windows: ```DashVenv\Scripts\activate.bat```
@@ -19,6 +20,14 @@ Activate virtual environment:
 
 ### How to run application:
 * ```python dash_plotly.py```
+Application will run on local machine port 80.
+
+#### Screenshots from the dashboard:
+![image 1](/images/image1.png)
+![image 2](/images/image2.png)
+![image 3](/images/image3.png)
+![image 4](/images/image4.png)
+![image 5](/images/image5.png)
 
 
 #### Known Issues and development under progress:
