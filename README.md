@@ -19,7 +19,7 @@ Activate virtual environment:
 * ```pip install -r requirements.txt```
 
 ### How to run application:
-* ```python dash_plotly.py```
+* ```python app.py```
 Application will run on local machine port 80.
 
 #### Screenshots from the dashboard:
