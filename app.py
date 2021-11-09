@@ -14,16 +14,16 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
-import stocks_data_load
 
 # local functions
-import data_functions as d_f
-import interface as ifc
-import stocks_data_load as sdl
+import data.data_functions as d_f
+import interface_helpers.layout as ifc
+import data.stocks_data_load as sdl
 
 
-available_stocks = d_f.get_ticker_names(d_f.initial_stocks())
-final_stocks_data = d_f.input_file('mystocks.csv')
+available_stocks = ifc.available_stocks()
+def final_stocks_data():
+    return d_f.input_file('data/mystocks.csv')
 
 # lux was BEST so far.
 # materia also OK
@@ -46,19 +46,19 @@ app.title = "BI Stocks by T.G."
 def serve_layout(): 
     return dbc.Container([ 
         html.H2("Stock Portfolio Dashboard", className="bg-dark text-white text-center p-3"),
-        dbc.Col(ifc.tabs, width=12, className="mt-4"),
+        dbc.Col(ifc.tabs(), width=12, className="mt-4"),
     ], fluid=True, className = "container-md")
 
-app.layout = serve_layout()
+app.layout = serve_layout
 
 
-@app.callback(
-    Output('row1', 'value'),
-    Input('tabs', 'value')
-)
-def update_tab1(_tab_content):
-    app.layout = serve_layout()
-    return ifc.row1
+#@app.callback(
+#    Output('row1', 'value'),
+#    Input('tabs', 'value')
+#)
+#def update_tab1(_tab_content):
+#    app.layout = serve_layout()
+#    return ifc.row1
         
 
 # Chart 1 - update by selecting stock tickers and choosing Nominal/Percent   
@@ -90,8 +90,8 @@ def update_graph(_tickers1, _amount_type, _position_type):
     fig = go.Figure()
     
     for loop_ticker in _tickers1:
-        fig.add_trace(go.Scatter(x=final_stocks_data['Date']
-                                 , y=final_stocks_data[loop_ticker + col_suffix_position + col_suffix_metric + col_suffix_amount]
+        fig.add_trace(go.Scatter(x=final_stocks_data()['Date']
+                                 , y=final_stocks_data()[loop_ticker + col_suffix_position + col_suffix_metric + col_suffix_amount]
                             , name=loop_ticker))
     fig.update_layout(
         template = figure_tmeplate,
@@ -126,11 +126,11 @@ def update_graph2(_ticker, _position_type):
         graph_title = 'both, open and closed position stock'
 
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=final_stocks_data['Date']
-                                 , y=final_stocks_data[_ticker + col_suffix_position + '_closing_value']
+    fig.add_trace(go.Scatter(x=final_stocks_data()['Date']
+                                 , y=final_stocks_data()[_ticker + col_suffix_position + '_closing_value']
                             , name= 'Closing value', mode='lines', fill='tozeroy', marker_color='#18bc9c'))
-    fig.add_trace(go.Scatter(x=final_stocks_data['Date']
-                                 , y=final_stocks_data[_ticker + col_suffix_position + '_initial_value']
+    fig.add_trace(go.Scatter(x=final_stocks_data()['Date']
+                                 , y=final_stocks_data()[_ticker + col_suffix_position + '_initial_value']
                             , name='Initial investment value', mode='lines', fill='tozeroy', marker_color='#e74c3c'))
     
     fig.update_layout(
@@ -180,11 +180,11 @@ def update_graph3(_position_type, _profit_investment, _amount_type):
 
     if _profit_investment == 'Investments':
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=final_stocks_data['Date'], y=final_stocks_data[col_suffix_position + '_closing_value_for_date']
+        fig.add_trace(go.Scatter(x=final_stocks_data()['Date'], y=final_stocks_data()[col_suffix_position + '_closing_value_for_date']
                                 , name='Closing/current value', mode='lines', fill='tozeroy', marker_color='#18bc9c'
                                 ))
 
-        fig.add_trace(go.Scatter(x=final_stocks_data['Date'], y=final_stocks_data[col_suffix_position + '_initial_value_for_date']
+        fig.add_trace(go.Scatter(x=final_stocks_data()['Date'], y=final_stocks_data()[col_suffix_position + '_initial_value_for_date']
                                 , name='Initial investment', mode='lines', fill='tozeroy', marker_color='#e74c3c'
                                 ))
         fig.update_layout(
@@ -201,8 +201,8 @@ def update_graph3(_position_type, _profit_investment, _amount_type):
         )
     else:
         fig = go.Figure()
-        pos_data = final_stocks_data[final_stocks_data[col]>=0]
-        neg_data = final_stocks_data[final_stocks_data[col]<0]
+        pos_data = final_stocks_data()[final_stocks_data()[col]>=0]
+        neg_data = final_stocks_data()[final_stocks_data()[col]<0]
         
         fig.add_trace(go.Bar(x=pos_data['Date'], y=pos_data[col]
                                 ,  #mode='bar', fill='tozeroy', 
@@ -254,7 +254,7 @@ def update_graph5(_position_type, _position_value_type):
     cols = d_f.get_ticker_headers(d_f.initial_stocks(), (col_suffix_position + col_suffix_value))
    
     investment_labels_pie = d_f.get_ticker_names(d_f.initial_stocks())
-    investment_amount_pie= np.array(ifc.final_stocks_data_last_rec[cols].iloc[0])
+    investment_amount_pie= np.array(ifc.final_stocks_data_last_rec()[cols].iloc[0])
     
     fig = go.Figure()
 
@@ -328,18 +328,18 @@ def update_output(n_clicks, name, date, price, amount, text):
     return text, '', '', NaN, NaN
 
 @app.callback(
-    Output('load-output-area', 'children'),
+    [Output('load-output-area', 'children'),
+    Output('load-output-area2', 'children')],
     Input('data-load', 'n_clicks')
 )
 def calcualte_data(n_clicks):
     if n_clicks > 0:
 
         sdl.run_data_load(all_stocks)
-        
-
-        with open('initial_positions.json', 'w') as fp:
+        with open('data/initial_positions.json', 'w') as fp:
             json.dump(all_stocks, fp, sort_keys=True, indent=4)
-        return 'Data Load has been Completed!'
+        return 'Data Load has been Completed!', dbc.Col(html.A(html.Button('Refresh Data'),href='/')
+        , className = 'text-dark btn btn-success m-1 border-bottom')
 
 
 

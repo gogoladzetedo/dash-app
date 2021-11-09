@@ -23,10 +23,8 @@ def get_ticker_headers(initial_data, header_suffix):
 def input_file(filename):
     return pd.read_csv(filename)
 
-
-
 def initial_stocks():
-    with open('initial_positions.json') as json_file:
+    with open('data/initial_positions.json') as json_file:
         init_file = json.load(json_file)
     return init_file
 

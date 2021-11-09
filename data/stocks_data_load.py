@@ -273,5 +273,5 @@ def run_data_load(_initial_stocks):
 
     stocks_data_calc = update_yahoo_data(stocks_data, _initial_stocks)
     final_stocks_data = calc_daily_sums(stocks_data_calc, _initial_stocks)
-    final_stocks_data.to_csv('mystocks.csv')
+    final_stocks_data.to_csv('data/mystocks.csv')
 

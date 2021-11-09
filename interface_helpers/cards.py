@@ -4,14 +4,13 @@ from dash import Dash
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-import data_functions
-
-available_stocks = data_functions.get_ticker_names(data_functions.initial_stocks())
+import data.data_functions
+import interface_helpers.layout as ifc
 
 def tickers_checklist(component_id):
     return dbc.Checklist(
         id=component_id,
-        options=[{"label": "{}".format(i), "value": i} for i in available_stocks],
+        options=[{"label": "{}".format(i), "value": i} for i in ifc.available_stocks()],
         #value=['SNOW', 'BABA'],
         switch=True,
         inline = True
@@ -20,7 +19,7 @@ def tickers_checklist(component_id):
 def tickers_option(component_id):
     return dcc.Dropdown(
         id=component_id,
-        options=[{"label": i, "value": i} for i in available_stocks],
+        options=[{"label": i, "value": i} for i in ifc.available_stocks()],
         #value="SNOW",
         clearable=False,
         className = 'text-dark',
@@ -139,7 +138,6 @@ def card_input_data():
             html.H5("Purchase / Sell", className="card-title"),
             html.P("add the details of each trade operation separately. For sell operations add minus sign before quantity."
             , className="card-text"),
-            
             dbc.Col(dcc.Input(id='stock-name', type='text', placeholder = 'Name of stock ticker'
             , className = 'text-dark form-control m-1')),
             dbc.Col(dcc.Input(id='stock-buy-date', type='text', placeholder = 'Date of the operation in DD-MM-YYYY format.'
@@ -157,5 +155,6 @@ def card_input_data():
             , className = 'text-dark btn btn-success m-1 border-bottom')),
             dbc.Col(html.Div(id='load-output-area', children='Click "Load and Calculate" once you are done with entering oeprations.'
             , className = 'text-dark m-1')),
+            dbc.Col(html.Div(id='load-output-area2')),
         ])
     ]

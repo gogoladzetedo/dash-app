@@ -12,19 +12,22 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
-import stocks_data_load
+import data.stocks_data_load
 
 # local functions
-import data_functions as d_f
-import cards as crd
+import data.data_functions as d_f
+import interface_helpers.cards as crd
 
 
-available_stocks = d_f.get_ticker_names(d_f.initial_stocks())
-final_stocks_data_last_rec = d_f.input_file('mystocks.csv').tail(1).copy()
+def available_stocks():
+    return d_f.get_ticker_names(d_f.initial_stocks())
+def final_stocks_data_last_rec():
+    return d_f.input_file('data/mystocks.csv').tail(1)
 
 
 
-row1 = html.Div(
+def row1():
+     return html.Div(
     [
         dbc.Row(
             [
@@ -60,7 +63,8 @@ row1 = html.Div(
     ]
 )
 
-row2 = html.Div([
+def row2():
+    return html.Div([
     dbc.Row([
 
         dbc.Col([
@@ -90,7 +94,8 @@ row2 = html.Div([
     ]),
 ])
 
-row3 = html.Div([
+def row3():
+    return html.Div([
     dbc.Row([
 
         dbc.Col([
@@ -127,7 +132,8 @@ row3 = html.Div([
     ]),
 ])
 
-row4 = html.Div([
+def row4():
+    return html.Div([
     dbc.Row([
 
         dbc.Col([
@@ -158,18 +164,41 @@ row4 = html.Div([
 ])
 
 
-row_input = html.Div([
-        dbc.Col(crd.card_input_data()
-            , className="mt-4")]) 
+def row_input():
+    return [ dbc.Col(
+        dbc.CardBody([
+            html.H5("Purchase / Sell", className="card-title"),
+            html.P("add the details of each trade operation separately. For sell operations add minus sign before quantity."
+            , className="card-text"),
+            dbc.Col(dcc.Input(id='stock-name', type='text', placeholder = 'Name of stock ticker'
+            , className = 'text-dark form-control m-1')),
+            dbc.Col(dcc.Input(id='stock-buy-date', type='text', placeholder = 'Date of the operation in DD-MM-YYYY format.'
+            , className = 'text-dark form-control m-1')),
+            dbc.Col(dcc.Input(id='stock-price', type='number', placeholder = 'Price of single stock'
+            , className = 'text-dark form-control m-1')),
+            dbc.Col(dcc.Input(id='stock-amount', type='number', placeholder = 'Number of stock'
+            , className = 'text-dark form-control m-1')),
+            dbc.Col(html.Button('Add operation', id='submit-val', n_clicks=0
+            , className = 'text-dark btn btn-success m-1 border-bottom')),
+            dbc.Col(html.Pre(id='container-button-basic', children='Enter values and press "Add" button '
+            , className = 'text-dark m-1')),
 
+            dbc.Col(html.Button('Load data and calculate', id='data-load', n_clicks=0
+            , className = 'text-dark btn btn-success m-1 border-bottom')),
+            dbc.Col(html.Div(id='load-output-area', children='Click "Load and Calculate" once you are done with entering oeprations.'
+            , className = 'text-dark m-1')),
+            dbc.Col(html.Div(id='load-output-area2')),
+        ])
+    , className="mt-4")]
 
-tabs = dbc.Tabs(
+def tabs():
+    return dbc.Tabs(
     [
-        dbc.Tab(row_input, tab_id="row_input", label="Add your portfolio"),
-        dbc.Tab(row1, tab_id="row1", label="Stock profits comparison"),
-        dbc.Tab(row2, tab_id="row2", label="Performance of a single stock"),
-        dbc.Tab(row3, tab_id="row3", label="Summary of the whole portfolio"),
-        dbc.Tab(row4, tab_id="row4", label="Share of stocks"),
+        dbc.Tab(row_input(), tab_id="row_input", label="Add portfolio"),
+        dbc.Tab(row1(), tab_id="row1", label="Compare Stock profits"),
+        dbc.Tab(row2(), tab_id="row2", label="Single stock performance"),
+        dbc.Tab(row3(), tab_id="row3", label="Portfolio summary"),
+        dbc.Tab(row4(), tab_id="row4", label="Share of stocks"),
         
     ],
     id="tabs",
