@@ -194,11 +194,11 @@ def row_input():
 def tabs():
     return dbc.Tabs(
     [
-        dbc.Tab(row_input(), tab_id="row_input", label="Add portfolio"),
-        dbc.Tab(row1(), tab_id="row1", label="Compare Stock profits"),
-        dbc.Tab(row2(), tab_id="row2", label="Single stock performance"),
-        dbc.Tab(row3(), tab_id="row3", label="Portfolio summary"),
-        dbc.Tab(row4(), tab_id="row4", label="Share of stocks"),
+        dbc.Tab(row_input(), tab_id="row_input", label="Add portfolio |"),
+        dbc.Tab(row1(), tab_id="row1", label="Compare Stock profits |"),
+        dbc.Tab(row2(), tab_id="row2", label="Single stock performance |"),
+        dbc.Tab(row3(), tab_id="row3", label="Portfolio summary |"),
+        dbc.Tab(row4(), tab_id="row4", label="Share of stocks |"),
         
     ],
     id="tabs",

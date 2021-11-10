@@ -41,16 +41,22 @@ figure_tmeplate = "lux"
 app = Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 
 
-app.title = "BI Stocks by T.G."
+app.title = "Portfolio Analytics"
 
 def serve_layout(): 
     return dbc.Container([ 
         html.H2("Stock Portfolio Dashboard", className="bg-dark text-white text-center p-3"),
         dbc.Col(ifc.tabs(), width=12, className="mt-4"),
+        dbc.Col(html.Br() ),
+        dbc.Col(
+            html.Footer(
+                html.A(children="project repo on GitHub", href='https://github.com/gogoladzetedo/dash-app')
+                , className="card-footer text-muted text-center bg-secondary")
+
+        )
     ], fluid=True, className = "container-md")
 
 app.layout = serve_layout
-
 
 #@app.callback(
 #    Output('row1', 'value'),
