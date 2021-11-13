@@ -1,34 +1,48 @@
 {
-    "BABA": [
+    "AAPL": [
         {
-            "date": "16-10-2020",
+            "date": " 2021-01-03",
             "is_empty": 0,
-            "price": 290,
-            "quantity": 5,
-            "value": 1450
+            "price": 125.0,
+            "quantity": 10,
+            "value": 1250.0
         }
     ],
-    "MSFT": [
+    "NNDM": [
         {
-            "date": "15-10-2020",
+            "date": " 2021-01-07",
             "is_empty": 0,
-            "price": 220,
-            "quantity": 10,
-            "value": 2200
+            "price": 6.7,
+            "quantity": 100,
+            "value": 670.0
         },
         {
-            "date": "19-10-2020",
+            "date": " 2021-03-02",
             "is_empty": 0,
-            "price": 230,
-            "quantity": 7,
-            "value": 1610
+            "price": 6.3,
+            "quantity": 50,
+            "value": 315.0
         },
         {
-            "date": "26-10-2020",
+            "date": " 2021-04-20",
             "is_empty": 0,
-            "price": 235,
-            "quantity": 10,
-            "value": 2350
+            "price": 7.2,
+            "quantity": -120,
+            "value": -864.0
+        },
+        {
+            "date": " 2021-06-16",
+            "is_empty": 0,
+            "price": 5.9,
+            "quantity": 150,
+            "value": 885.0
+        },
+        {
+            "date": " 2021-07-01",
+            "is_empty": 0,
+            "price": 5.1,
+            "quantity": -100,
+            "value": -509.99999999999994
         }
     ]
 }

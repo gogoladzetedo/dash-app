@@ -136,7 +136,24 @@ def card_input_data():
     return [
         dbc.CardBody([
             html.H5("Purchase / Sell", className="card-title"),
-            html.P("add the details of each trade operation separately. For sell operations add minus sign before quantity."
+            html.Div([
+                #<label for="formFile" class="form-label mt-4">Default file input example</label>
+                dbc.Label(id="upload-data-text", className="form-label", children="upload .csv file below"),
+                dcc.Upload(
+                    id="upload-data",
+                    children=html.Div([" To upload the portfolio operations, Drag and Drop or Select a File"]),
+                    multiple=False,
+                    style={
+                        "borderWidth": "1px",
+                        "borderStyle": "dashed",
+                        "borderRadius": "3px",
+                        "borderColor": "black"
+                    },
+                    className = "form-control btn btn-info",
+                ),]
+                , className="form-group", id="form_for_file_upload"
+            ),
+            html.P("Or, add the details of each trade operation separately. For sell operations add minus sign before quantity."
             , className="card-text"),
             dbc.Col(dcc.Input(id='stock-name', type='text', placeholder = 'Name of stock ticker'
             , className = 'text-dark form-control m-1')),
@@ -147,7 +164,7 @@ def card_input_data():
             dbc.Col(dcc.Input(id='stock-amount', type='number', placeholder = 'Number of stock'
             , className = 'text-dark form-control m-1')),
             dbc.Col(html.Button('Add operation', id='submit-val', n_clicks=0
-            , className = 'text-dark btn btn-success m-1 border-bottom')),
+            , className = 'text-dark btn btn-info m-1 border-bottom')),
             dbc.Col(html.Pre(id='container-button-basic', children='Enter values and press "Add" button '
             , className = 'text-dark m-1')),
 

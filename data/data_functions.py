@@ -1,5 +1,7 @@
 import pandas as pd
 import json
+import io
+import base64
 
 def get_ticker_names(obj):
     '''
@@ -28,3 +30,47 @@ def initial_stocks():
         init_file = json.load(json_file)
     return init_file
 
+
+
+def parse_contents(contents, filename):
+    content_type, content_string = contents.split(',')
+
+    decoded = base64.b64decode(content_string)
+    try:
+        if 'csv' in filename:
+            # Assume that the user uploaded a CSV file
+            df = pd.read_csv(
+                io.StringIO(decoded.decode('utf-8')), header = None)
+        elif 'xls' in filename:
+            # Assume that the user uploaded an excel file
+            df = pd.read_excel(io.BytesIO(decoded))
+    except Exception as e:
+        print(e)
+        return 'There was an error processing this file.'
+    return df
+
+def rename_df_columns(df):
+    df.columns = ['name', 'date', 'price', 'quantity'] 
+    return df
+
+def df_to_dict(df):
+    all_stocks = {}
+    for _index, _row in df.iterrows():
+
+        current_stock = {}
+
+        current_stock['price'] = _row['price']
+        current_stock['quantity'] = _row['quantity']
+        current_stock['value'] = _row['price'] * _row['quantity']
+        current_stock['date'] = _row['date']
+        current_stock['is_empty'] = 0
+
+        if _row['name'] in all_stocks:
+            added_current_stock = all_stocks[_row['name']].copy()
+            added_current_stock.append(current_stock)
+        else:
+            added_current_stock = []
+            added_current_stock.append(current_stock)
+
+        all_stocks[_row['name']] = added_current_stock
+    return all_stocks

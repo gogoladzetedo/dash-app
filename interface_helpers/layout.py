@@ -165,31 +165,7 @@ def row4():
 
 
 def row_input():
-    return [ dbc.Col(
-        dbc.CardBody([
-            html.H5("Purchase / Sell", className="card-title"),
-            html.P("add the details of each trade operation separately. For sell operations add minus sign before quantity."
-            , className="card-text"),
-            dbc.Col(dcc.Input(id='stock-name', type='text', placeholder = 'Name of stock ticker'
-            , className = 'text-dark form-control m-1')),
-            dbc.Col(dcc.Input(id='stock-buy-date', type='text', placeholder = 'Date of the operation in DD-MM-YYYY format.'
-            , className = 'text-dark form-control m-1')),
-            dbc.Col(dcc.Input(id='stock-price', type='number', placeholder = 'Price of single stock'
-            , className = 'text-dark form-control m-1')),
-            dbc.Col(dcc.Input(id='stock-amount', type='number', placeholder = 'Number of stock'
-            , className = 'text-dark form-control m-1')),
-            dbc.Col(html.Button('Add operation', id='submit-val', n_clicks=0
-            , className = 'text-dark btn btn-success m-1 border-bottom')),
-            dbc.Col(html.Pre(id='container-button-basic', children='Enter values and press "Add" button '
-            , className = 'text-dark m-1')),
-
-            dbc.Col(html.Button('Load data and calculate', id='data-load', n_clicks=0
-            , className = 'text-dark btn btn-success m-1 border-bottom')),
-            dbc.Col(html.Div(id='load-output-area', children='Click "Load and Calculate" once you are done with entering oeprations.'
-            , className = 'text-dark m-1')),
-            dbc.Col(html.Div(id='load-output-area2')),
-        ])
-    , className="mt-4")]
+    return crd.card_input_data()
 
 def tabs():
     return dbc.Tabs(

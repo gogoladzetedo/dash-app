@@ -20,6 +20,9 @@ import data.data_functions as d_f
 import interface_helpers.layout as ifc
 import data.stocks_data_load as sdl
 
+import io
+import base64
+
 
 available_stocks = ifc.available_stocks()
 def final_stocks_data():
@@ -302,7 +305,6 @@ def update_output(n_clicks, name, date, price, amount, text):
         and amount is not None 
         and n_clicks > 0):
         
-            
         current_stock = {}
         current_stock['price'] = price
         current_stock['quantity'] = amount
@@ -330,8 +332,35 @@ def update_output(n_clicks, name, date, price, amount, text):
         current_operations_txt = oprtation_type + ' {} items of "{}" stock, on {} each priced as {}'.format(
             amount, name, date, price, n_clicks)
         text = text + ' \n ' + current_operations_txt
+
+        with open('data/initial_positions.json', 'w') as fp:
+            json.dump(all_stocks, fp, sort_keys=True, indent=4)
+
+        
     
     return text, '', '', NaN, NaN
+
+
+
+
+@app.callback(
+    Output('upload-data-text', 'children'), 
+    [Input('upload-data', 'contents'),
+    Input('upload-data', 'filename')]
+)
+def updload_file(_contents, _filename):
+    if _contents:
+        df = d_f.parse_contents(_contents, _filename)
+        df = d_f.rename_df_columns(df)
+        _all_stocks = d_f.df_to_dict(df)
+        with open('data/initial_positions.json', 'w') as fp:
+            json.dump(_all_stocks, fp, sort_keys=True, indent=4)
+        res = 'File upload Completed! Click "Load and Calculate" to calculate dashboard metrics'
+
+    else:
+        res = 'upload .csv file below' 
+    return res
+
 
 @app.callback(
     [Output('load-output-area', 'children'),
@@ -340,10 +369,10 @@ def update_output(n_clicks, name, date, price, amount, text):
 )
 def calcualte_data(n_clicks):
     if n_clicks > 0:
-
-        sdl.run_data_load(all_stocks)
-        with open('data/initial_positions.json', 'w') as fp:
-            json.dump(all_stocks, fp, sort_keys=True, indent=4)
+        
+        
+        
+        sdl.run_data_load(d_f.initial_stocks())
         return 'Data Load has been Completed!', dbc.Col(html.A(html.Button('Refresh Data'),href='/')
         , className = 'text-dark btn btn-success m-1 border-bottom')
 
