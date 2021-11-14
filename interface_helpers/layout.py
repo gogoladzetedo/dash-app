@@ -165,7 +165,39 @@ def row4():
 
 
 def row_input():
-    return crd.card_input_data()
+    return [
+        html.Div([
+            html.Br(),
+            html.Div(html.H3("Purchase / Sell", className="card-title text-center"),),
+            dbc.Row([
+
+                dbc.Col([
+                    dbc.Row([
+                        dbc.Col(dbc.Card(crd.card_input_data(), className="shadow-sm"))
+                        ], className = "p-1"
+                    ),
+                ]),
+
+                dbc.Col([
+                    dbc.Row([
+                        dbc.Col(dbc.Card(crd.card_upload_file(), className="shadow-sm"))
+                        ], className = "p-1"
+                    ),
+                ], width = 6)
+
+            ]),
+            html.Br(),
+            dbc.Row([
+                dbc.Col([
+                    dbc.Row([
+                        dbc.Col(dbc.Card(crd.card_input_submit(), className="shadow-sm"))
+                        ], className = "p-1", style={"text-align":"center"}
+                    ),
+                ])
+            ])
+        ])
+    ]
+
 
 def tabs():
     return dbc.Tabs(

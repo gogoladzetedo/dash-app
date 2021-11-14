@@ -336,10 +336,7 @@ def update_output(n_clicks, name, date, price, amount, text):
         with open('data/initial_positions.json', 'w') as fp:
             json.dump(all_stocks, fp, sort_keys=True, indent=4)
 
-        
-    
     return text, '', '', NaN, NaN
-
 
 
 

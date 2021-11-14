@@ -8,6 +8,38 @@
             "value": 1250.0
         }
     ],
+    "CRM": [
+        {
+            "date": " 2020-12-22",
+            "is_empty": 0,
+            "price": 255.0,
+            "quantity": 6,
+            "value": 1530.0
+        }
+    ],
+    "MSFT": [
+        {
+            "date": " 2020-12-22",
+            "is_empty": 0,
+            "price": 255.0,
+            "quantity": 10,
+            "value": 2550.0
+        },
+        {
+            "date": " 2021-05-16",
+            "is_empty": 0,
+            "price": 282.0,
+            "quantity": -7,
+            "value": -1974.0
+        },
+        {
+            "date": " 2021-08-30",
+            "is_empty": 0,
+            "price": 305.0,
+            "quantity": 5,
+            "value": 1525.0
+        }
+    ],
     "NNDM": [
         {
             "date": " 2021-01-07",
