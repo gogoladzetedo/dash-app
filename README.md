@@ -35,7 +35,7 @@ Application will run on local machine port 80.
 
 
 #### Known Issues and development under progress:
-- Need a refresh of the source data after the user input. Currently, it shows the data correctly only on the next time when server runs.
+- Improve input data refresh functionality.
+- Change the metric tabs to one tab with all the metrics as the option within.
 - Store the state of the user input.
-- Moving input functionalities into proper local files, refactor.
 - UI input validation
