@@ -1,9 +1,13 @@
-## Portfolio Analytics
-#### Web dashboard application written in Dash and plotly.
+## Financial Stokcs Portfolio Analytics
+
+##### Application lets users to upload the stock market transactions and calculates the metrics accordingly. 
+
+Web dashboard application written in Dash and plotly.
 
 Application takes the stock trading operations as input, loads the daily historical prices for the stocks in the portfolio, 
 calculates the metrics and shows the respective plots per stock, compares profits and investments of stocks in time, 
 shows the metrics in the context of open or closed positions together and separately, and the proportion of the stocks in the portfolio.
+Upload of the transactions can be done either, by manually entering each stock market operation - sell or buy, or by uploading a .csv file that holds these transactions.
 
 [The Application](https://portfolio-dash.azurewebsites.net/) is deployed on Azure web apps.
 

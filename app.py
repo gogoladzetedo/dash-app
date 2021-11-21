@@ -236,6 +236,8 @@ def update_graph3(_position_type, _profit_investment, _amount_type):
     return fig
 
 
+
+
 @app.callback(
     Output('total_values_pie', 'figure'),
     [Input('position_types_option_list_4', 'value'),
@@ -280,7 +282,7 @@ def update_graph5(_position_type, _position_value_type):
     return fig
 
 
-### Functionality for the input data ###
+##### Functionality for the input data #####
 all_stocks = {}
 
 @app.callback(
