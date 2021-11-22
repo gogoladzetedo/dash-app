@@ -4,6 +4,8 @@ import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import numpy as np
 from pandas_datareader import data
 from datetime import date
+import pandasql as psql
+import data.data_functions as d_f
 
 
 def get_min_date(obj):
@@ -264,14 +266,35 @@ def calc_daily_sums(yahoo_data, initial_data):
     yahoo_data = yahoo_data[yahoo_data[first_ticker].isnull()==False]
     return yahoo_data
 
+def fill_df_with_past(_initial_stocks, _df_dates, _stocks_data):
+
+    q = """
+    SELECT SUBSTRING(A.DateCol, 0, 11) AS Date, """ + d_f.generate_select_tickers(get_ticker_names(_initial_stocks)) + """
+    FROM _df_dates AS A
+    LEFT JOIN _stocks_data AS B
+    ON A.DateCol = B.Date
+    LEFT JOIN _stocks_data AS B_1
+    ON Date(SUBSTRING(A.DateCol, 0, 11)) = Date(SUBSTRING(B_1.Date, 0, 11), '+1 day')
+    LEFT JOIN _stocks_data AS B_2
+    ON Date(SUBSTRING(A.DateCol, 0, 11)) = Date(SUBSTRING(B_2.Date, 0, 11), '+2 day')
+    LEFT JOIN _stocks_data AS B_3
+    ON Date(SUBSTRING(A.DateCol, 0, 11)) = Date(SUBSTRING(B_3.Date, 0, 11), '+3 day')
+    """
+    return psql.sqldf(q, locals())
 
 def run_data_load(_initial_stocks):
     stocks_data = get_yahoo_data(
         get_ticker_names(_initial_stocks)
         , get_min_date(_initial_stocks)
         , date.today())
+    
+    df_dates = pd.DataFrame(pd.date_range(get_min_date(_initial_stocks), date.today()), columns = ['DateCol'])
 
-    stocks_data_calc = update_yahoo_data(stocks_data, _initial_stocks)
+    stocks_data_filled = fill_df_with_past(_initial_stocks, df_dates, stocks_data)
+    stocks_data_filled['Date'] = pd.to_datetime(stocks_data_filled['Date'])
+
+
+    stocks_data_calc = update_yahoo_data(stocks_data_filled, _initial_stocks)
     final_stocks_data = calc_daily_sums(stocks_data_calc, _initial_stocks)
     final_stocks_data.to_csv('data/mystocks.csv')
 

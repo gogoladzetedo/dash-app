@@ -1,1 +1,6 @@
-dash-env/
+dash-venv/
+Untitled-1.ipynb
+__pycache__/
+to-do.txt
+interface_helpers/__pycache__/
+data/__pycache__/

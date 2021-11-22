@@ -3,6 +3,7 @@ import json
 import io
 import base64
 
+
 def get_ticker_names(obj):
     '''
     returns the ticker names as the list from the input dictionary
@@ -30,7 +31,15 @@ def initial_stocks():
         init_file = json.load(json_file)
     return init_file
 
-
+def generate_select_tickers(tickers_list):
+    res = ''
+    for row_n, tick in enumerate(tickers_list):
+        if row_n == 0:
+            res = res + ''
+        else:
+            res = res + ', '
+        res = res + 'COALESCE(B.'+tick+', B_1.'+tick+', B_2.'+tick+', B_3.'+tick+') AS '+tick
+    return res
 
 def parse_contents(contents, filename):
     content_type, content_string = contents.split(',')
