@@ -1,9 +1,9 @@
 import pandas_datareader
 pandas_datareader.__version__
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
-import numpy as np
 from pandas_datareader import data
 from datetime import date
+import math
 import pandasql as psql
 import data.data_functions as d_f
 
@@ -46,20 +46,20 @@ def update_yahoo_data(yahoo_data, initial_data):
         total_profit_rate_col_name = ticker + '_total_profit_rate'
 
 
-        yahoo_data[open_initial_value_col_name] = np.NaN
-        yahoo_data[open_closing_value_col_name] = np.NaN
-        yahoo_data[open_profit_nominal_col_name] = np.NaN
-        yahoo_data[open_profit_rate_col_name] = np.NaN
+        yahoo_data[open_initial_value_col_name] = math.nan
+        yahoo_data[open_closing_value_col_name] = math.nan
+        yahoo_data[open_profit_nominal_col_name] = math.nan
+        yahoo_data[open_profit_rate_col_name] = math.nan
         
         yahoo_data[closed_initial_value_col_name] = 0
         yahoo_data[closed_closing_value_col_name] = 0
-        yahoo_data[closed_profit_nominal_col_name] = np.NaN
-        yahoo_data[closed_profit_rate_col_name] = np.NaN
+        yahoo_data[closed_profit_nominal_col_name] = math.nan
+        yahoo_data[closed_profit_rate_col_name] = math.nan
         
-        yahoo_data[total_initial_value_col_name] = np.NaN
-        yahoo_data[total_closing_value_col_name] = np.NaN
-        yahoo_data[total_profit_nominal_col_name] = np.NaN
-        yahoo_data[total_profit_rate_col_name] = np.NaN
+        yahoo_data[total_initial_value_col_name] = math.nan
+        yahoo_data[total_closing_value_col_name] = math.nan
+        yahoo_data[total_profit_nominal_col_name] = math.nan
+        yahoo_data[total_profit_rate_col_name] = math.nan
         
 
         quantity = 0
@@ -193,20 +193,20 @@ def calc_daily_sums(yahoo_data, initial_data):
 
 
 
-    yahoo_data['open_initial_value_for_date'] = np.NaN
-    yahoo_data['open_closing_value_for_date'] = np.NaN
-    yahoo_data['open_profit_nominal_for_date'] = np.NaN
-    yahoo_data['open_profit_rate_for_date'] = np.NaN
+    yahoo_data['open_initial_value_for_date'] = math.nan
+    yahoo_data['open_closing_value_for_date'] = math.nan
+    yahoo_data['open_profit_nominal_for_date'] = math.nan
+    yahoo_data['open_profit_rate_for_date'] = math.nan
 
-    yahoo_data['closed_initial_value_for_date'] = np.NaN
-    yahoo_data['closed_closing_value_for_date'] = np.NaN
-    yahoo_data['closed_profit_nominal_for_date'] = np.NaN
-    yahoo_data['closed_profit_rate_for_date'] = np.NaN
+    yahoo_data['closed_initial_value_for_date'] = math.nan
+    yahoo_data['closed_closing_value_for_date'] = math.nan
+    yahoo_data['closed_profit_nominal_for_date'] = math.nan
+    yahoo_data['closed_profit_rate_for_date'] = math.nan
 
-    yahoo_data['total_initial_value_for_date'] = np.NaN
-    yahoo_data['total_closing_value_for_date'] = np.NaN
-    yahoo_data['total_profit_nominal_for_date'] = np.NaN
-    yahoo_data['total_profit_rate_for_date'] = np.NaN
+    yahoo_data['total_initial_value_for_date'] = math.nan
+    yahoo_data['total_closing_value_for_date'] = math.nan
+    yahoo_data['total_profit_nominal_for_date'] = math.nan
+    yahoo_data['total_profit_rate_for_date'] = math.nan
 
 
     

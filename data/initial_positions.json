@@ -1,80 +1,54 @@
 {
-    "AAPL": [
+    "AYX": [
         {
-            "date": " 2021-01-03",
+            "date": " 2021-09-20",
             "is_empty": 0,
-            "price": 125.0,
-            "quantity": 10,
-            "value": 1250.0
+            "price": 68.96,
+            "quantity": 10.377469999999999,
+            "value": 715.6303311999999
         }
     ],
-    "CRM": [
+    "BNGO": [
         {
-            "date": " 2020-12-22",
+            "date": " 2021-09-20",
             "is_empty": 0,
-            "price": 255.0,
-            "quantity": 6,
-            "value": 1530.0
+            "price": 5.09,
+            "quantity": 98.23183,
+            "value": 500.0000147
         }
     ],
     "MSFT": [
         {
-            "date": " 2020-12-22",
+            "date": " 2021-09-20",
             "is_empty": 0,
-            "price": 255.0,
-            "quantity": 10,
-            "value": 2550.0
+            "price": 293.27,
+            "quantity": 3.75041,
+            "value": 1099.8827406999999
         },
         {
-            "date": " 2021-05-16",
+            "date": " 2021-09-20",
             "is_empty": 0,
-            "price": 282.0,
-            "quantity": -7,
-            "value": -1974.0
-        },
-        {
-            "date": " 2021-08-30",
-            "is_empty": 0,
-            "price": 305.0,
-            "quantity": 5,
-            "value": 1525.0
+            "price": 294.76,
+            "quantity": 0.33926,
+            "value": 100.0002776
         }
     ],
-    "NNDM": [
+    "SPLK": [
         {
-            "date": " 2021-01-07",
+            "date": " 2021-11-19",
             "is_empty": 0,
-            "price": 6.7,
-            "quantity": 100,
-            "value": 670.0
-        },
+            "price": 134.61,
+            "quantity": 2.4906,
+            "value": 335.25966600000004
+        }
+    ],
+    "TWLO": [
         {
-            "date": " 2021-03-02",
+            "date": " 2021-11-10",
             "is_empty": 0,
-            "price": 6.3,
-            "quantity": 50,
-            "value": 315.0
-        },
-        {
-            "date": " 2021-04-20",
-            "is_empty": 0,
-            "price": 7.2,
-            "quantity": -120,
-            "value": -864.0
-        },
-        {
-            "date": " 2021-06-16",
-            "is_empty": 0,
-            "price": 5.9,
-            "quantity": 150,
-            "value": 885.0
-        },
-        {
-            "date": " 2021-07-01",
-            "is_empty": 0,
-            "price": 5.1,
-            "quantity": -100,
-            "value": -509.99999999999994
+            "price": 296.2,
+            "quantity": 2.27454,
+            "value": 673.718748
         }
     ]
 }

@@ -5,7 +5,6 @@ import base64
 import pandas_datareader
 pandas_datareader.__version__
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
-import numpy as np
 from pandas_datareader import data
 from datetime import date
 import pandasql as psql

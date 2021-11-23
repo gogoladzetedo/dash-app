@@ -2,7 +2,6 @@ from numpy.core.numeric import NaN
 import pandas_datareader
 pandas_datareader.__version__
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
-import numpy as np
 import plotly.graph_objects as go
 import json
 
@@ -20,8 +19,6 @@ import data.data_functions as d_f
 import interface_helpers.layout as ifc
 import data.stocks_data_load as sdl
 
-import io
-import base64
 
 
 available_stocks = ifc.available_stocks()
@@ -265,7 +262,7 @@ def update_graph5(_position_type, _position_value_type):
     cols = d_f.get_ticker_headers(d_f.initial_stocks(), (col_suffix_position + col_suffix_value))
    
     investment_labels_pie = d_f.get_ticker_names(d_f.initial_stocks())
-    investment_amount_pie= np.array(ifc.final_stocks_data_last_rec()[cols].iloc[0])
+    investment_amount_pie= ifc.final_stocks_data_last_rec()[cols].iloc[0].tolist()
     
     fig = go.Figure()
 

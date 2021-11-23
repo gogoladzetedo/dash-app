@@ -171,8 +171,8 @@ def card_upload_file():
         dbc.CardBody([
             html.H5("File Upload", className="card-title"),
             html.Div([
-                html.P("Upload a .csv file containing the portfolio operations, each operation ona separate line."+
-                " File must not contain header. Order of columns is respective to the manual input:"),
+                html.P("Upload a comma-separated (.csv) file containing the portfolio operations. Each operation on a separate line."+
+                " File must NOT contain the headers. Order of the columns is respective to the manual input:"),
                 html.Ul([
                     html.Li(["Stock ticker name", html.Ul(html.Li("Example: MSFT"), className = "font-italic")]),
                     html.Li(["Operation date in YYYY-MM-DD format", html.Ul(html.Li("Example: 2021-03-25"), className = "font-italic")]),
