@@ -136,7 +136,7 @@ def card_input_submit():
     return [
         dbc.CardBody([
             dbc.Col(html.Button('Load data and calculate', id='data-load', n_clicks=0
-            , className = 'btn btn-success m-1')),
+            , className = 'btn btn-success m-1 disabled', disabled=True)),
             dbc.Col(html.Div(id='load-output-area', children='Click "Load and Calculate" once you are done with entering oeprations.'
             , className = 'text-dark m-1')),
             dbc.Col(html.Div(id='load-output-area2')),
@@ -180,7 +180,6 @@ def card_upload_file():
                     html.Li(["Quantity of the purchased stocks. If it's a sell oepration, add a minus before."
                     , html.Ul([html.Li("Example for purchase: 10"), html.Li("Example for Sell: -10")], className = "font-italic")]),]
                 ),
-                dbc.Label(id="upload-data-text", className="form-label", children="upload .csv file below"),
                 dcc.Upload(
                     id="upload-data",
                     children=html.Div(["Drag and Drop or Select a File"]),
@@ -192,7 +191,8 @@ def card_upload_file():
                         "borderColor": "black"
                     },
                     className = "form-control btn btn-info",
-                ),]
+                ),
+                dbc.Label(id="upload-data-text", className="form-label", children="upload .csv file below"),]
                 , className="form-group", id="form_for_file_upload"
             ),
         ])

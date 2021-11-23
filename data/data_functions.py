@@ -2,8 +2,28 @@ import pandas as pd
 import json
 import io
 import base64
+import pandas_datareader
+pandas_datareader.__version__
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import numpy as np
+from pandas_datareader import data
+from datetime import date
+import pandasql as psql
 
 
+
+def get_min_date(obj):
+    '''
+    returns the earliest date when the transaction was made, i.e. first date in the input dictionary
+    '''
+    
+    min_date = '2039-01-01'
+    for ticker in obj:
+        curr_date = obj[ticker][0]['date']
+        if curr_date < min_date:
+            min_date = curr_date
+    return min_date
+    
 def get_ticker_names(obj):
     '''
     returns the ticker names as the list from the input dictionary

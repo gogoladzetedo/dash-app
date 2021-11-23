@@ -8,36 +8,6 @@ import pandasql as psql
 import data.data_functions as d_f
 
 
-def get_min_date(obj):
-    '''
-    returns the earliest date when the transaction was made, i.e. first date in the input dictionary
-    '''
-    
-    min_date = '2039-01-01'
-    for ticker in obj:
-        curr_date = obj[ticker][0]['date']
-        if curr_date < min_date:
-            min_date = curr_date
-    return min_date
-
-def get_ticker_names(obj):
-    '''
-    returns the ticker names as the list from the input dictionary
-    '''
-    tickers = []
-    for ticker in obj:
-        tickers.append(ticker)
-    return tickers
-
-def get_ticker_headers(initial_data, header_suffix):
-    '''
-    generates the new column names by adding the input suffix to the stock ticker
-    '''
-    nominal_profit_headers = []
-    for ticker in initial_data:
-        header_name = ticker + header_suffix
-        nominal_profit_headers.append(header_name)
-    return nominal_profit_headers
 
 def get_yahoo_data(tickers, start_date, end_date):
     '''
@@ -206,20 +176,20 @@ def calc_daily_sums(yahoo_data, initial_data):
     Additionally, it removes the records with null values.
     '''
     
-    open_initial_value_headers = get_ticker_headers(initial_data, '_open_initial_value')
-    open_closing_value_headers = get_ticker_headers(initial_data, '_open_closing_value')
-    open_profit_nominal_headers = get_ticker_headers(initial_data, '_open_profit_nominal')
-    open_profit_rate_headers = get_ticker_headers(initial_data, '_open_profit_rate')
+    open_initial_value_headers = d_f.get_ticker_headers(initial_data, '_open_initial_value')
+    open_closing_value_headers = d_f.get_ticker_headers(initial_data, '_open_closing_value')
+    open_profit_nominal_headers = d_f.get_ticker_headers(initial_data, '_open_profit_nominal')
+    open_profit_rate_headers = d_f.get_ticker_headers(initial_data, '_open_profit_rate')
 
-    closed_initial_value_headers = get_ticker_headers(initial_data, '_closed_initial_value')
-    closed_closing_value_headers = get_ticker_headers(initial_data, '_closed_closing_value')
-    closed_profit_nominal_headers = get_ticker_headers(initial_data, '_closed_profit_nominal')
-    closed_profit_rate_headers = get_ticker_headers(initial_data, '_closed_profit_rate')
+    closed_initial_value_headers = d_f.get_ticker_headers(initial_data, '_closed_initial_value')
+    closed_closing_value_headers = d_f.get_ticker_headers(initial_data, '_closed_closing_value')
+    closed_profit_nominal_headers = d_f.get_ticker_headers(initial_data, '_closed_profit_nominal')
+    closed_profit_rate_headers = d_f.get_ticker_headers(initial_data, '_closed_profit_rate')
 
-    total_initial_value_headers = get_ticker_headers(initial_data, '_total_initial_value')
-    total_closing_value_headers = get_ticker_headers(initial_data, '_total_closing_value')
-    total_profit_nominal_headers = get_ticker_headers(initial_data, '_total_profit_nominal')
-    total_profit_rate_headers = get_ticker_headers(initial_data, '_total_profit_rate')
+    total_initial_value_headers = d_f.get_ticker_headers(initial_data, '_total_initial_value')
+    total_closing_value_headers = d_f.get_ticker_headers(initial_data, '_total_closing_value')
+    total_profit_nominal_headers = d_f.get_ticker_headers(initial_data, '_total_profit_nominal')
+    total_profit_rate_headers = d_f.get_ticker_headers(initial_data, '_total_profit_rate')
 
 
 
@@ -262,14 +232,14 @@ def calc_daily_sums(yahoo_data, initial_data):
             yahoo_data['total_closing_value_for_date'].loc[i] - yahoo_data['total_initial_value_for_date'].loc[i]
             ) / yahoo_data['total_initial_value_for_date'].loc[i]
 
-    first_ticker = get_ticker_names(initial_data)[0]
+    first_ticker = d_f.get_ticker_names(initial_data)[0]
     yahoo_data = yahoo_data[yahoo_data[first_ticker].isnull()==False]
     return yahoo_data
 
 def fill_df_with_past(_initial_stocks, _df_dates, _stocks_data):
 
     q = """
-    SELECT SUBSTRING(A.DateCol, 0, 11) AS Date, """ + d_f.generate_select_tickers(get_ticker_names(_initial_stocks)) + """
+    SELECT SUBSTRING(A.DateCol, 0, 11) AS Date, """ + d_f.generate_select_tickers(d_f.get_ticker_names(_initial_stocks)) + """
     FROM _df_dates AS A
     LEFT JOIN _stocks_data AS B
     ON A.DateCol = B.Date
@@ -284,11 +254,11 @@ def fill_df_with_past(_initial_stocks, _df_dates, _stocks_data):
 
 def run_data_load(_initial_stocks):
     stocks_data = get_yahoo_data(
-        get_ticker_names(_initial_stocks)
-        , get_min_date(_initial_stocks)
+        d_f.get_ticker_names(_initial_stocks)
+        , d_f.get_min_date(_initial_stocks)
         , date.today())
     
-    df_dates = pd.DataFrame(pd.date_range(get_min_date(_initial_stocks), date.today()), columns = ['DateCol'])
+    df_dates = pd.DataFrame(pd.date_range(d_f.get_min_date(_initial_stocks), date.today()), columns = ['DateCol'])
 
     stocks_data_filled = fill_df_with_past(_initial_stocks, df_dates, stocks_data)
     stocks_data_filled['Date'] = pd.to_datetime(stocks_data_filled['Date'])

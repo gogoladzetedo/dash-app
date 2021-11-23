@@ -293,6 +293,9 @@ all_stocks = {}
     Output('stock-price', 'value'),
     Output('stock-amount', 'value'),
 
+    #Output('data-load', 'className'),
+    #Output('data-load', 'disabled'),
+
     Input('submit-val', 'n_clicks'),
     State('stock-name', 'value'),
     State('stock-buy-date', 'value'),
@@ -337,28 +340,48 @@ def update_output(n_clicks, name, date, price, amount, text):
 
         with open('data/initial_positions.json', 'w') as fp:
             json.dump(all_stocks, fp, sort_keys=True, indent=4)
+        
+        classN = "btn btn-success m-1"
+        is_disabled = False
+    else:
+        classN = "btn btn-success m-1 disabled"
+        is_disabled = True
 
-    return text, '', '', NaN, NaN
+    return text, '', '', NaN, NaN#, classN, is_disabled
 
 
 
 @app.callback(
-    Output('upload-data-text', 'children'), 
+    [Output('upload-data-text', 'children'),
+    Output('data-load', 'className'),
+    Output('data-load', 'disabled')], 
     [Input('upload-data', 'contents'),
     Input('upload-data', 'filename')]
 )
-def updload_file(_contents, _filename):
+def updload_file(_contents, _filename):    
     if _contents:
-        df = d_f.parse_contents(_contents, _filename)
-        df = d_f.rename_df_columns(df)
-        _all_stocks = d_f.df_to_dict(df)
-        with open('data/initial_positions.json', 'w') as fp:
-            json.dump(_all_stocks, fp, sort_keys=True, indent=4)
-        res = 'File upload Completed! Click "Load and Calculate" to calculate dashboard metrics'
+        try:
+            df = d_f.parse_contents(_contents, _filename)
+            df = d_f.rename_df_columns(df)
+            _all_stocks = d_f.df_to_dict(df)
+            with open('data/initial_positions.json', 'w') as fp:
+                json.dump(_all_stocks, fp, sort_keys=True, indent=4)
+            res = html.P('File upload Completed! Click "Load and Calculate" to calculate dashboard metrics'
+            , className="font-weight-bold text-success")
+            classN = "btn btn-success m-1"
+            is_disabled = False
+        except Exception as e:
+            print(e)
+            res = html.P('Upload process failed! Please, check file requirements listed above.'
+            , className="font-weight-bold text-danger")
+            classN = "btn btn-success m-1 disabled"
+            is_disabled = True
 
     else:
         res = 'upload .csv file below' 
-    return res
+        classN = "btn btn-success m-1 disabled"
+        is_disabled = True
+    return res, classN, is_disabled
 
 
 @app.callback(
@@ -372,8 +395,8 @@ def calcualte_data(n_clicks):
         
         
         sdl.run_data_load(d_f.initial_stocks())
-        return 'Data Load has been Completed!', dbc.Col(html.A(html.Button('Refresh Data'),href='/')
-        , className = 'text-dark btn btn-success m-1 border-bottom')
+        return 'Data Load has been Completed!', dbc.Col(html.A(html.Button('Refresh Data'
+        , className = 'btn btn-danger m-1', ),href='/'))
 
 
 
