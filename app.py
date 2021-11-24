@@ -1,10 +1,10 @@
-from numpy.core.numeric import NaN
+
 import pandas_datareader
 pandas_datareader.__version__
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import plotly.graph_objects as go
 import json
-
+import math
 
 import plotly.express as px
 from dash import Dash
@@ -344,7 +344,7 @@ def update_output(n_clicks, name, date, price, amount, text):
         classN = "btn btn-success m-1 disabled"
         is_disabled = True
 
-    return text, '', '', NaN, NaN#, classN, is_disabled
+    return text, '', '', math.nan, math.nan#, classN, is_disabled
 
 
 
