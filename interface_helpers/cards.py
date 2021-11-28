@@ -7,6 +7,7 @@ import dash_html_components as html
 import data.data_functions
 import interface_helpers.layout as ifc
 
+
 def tickers_checklist(component_id):
     return dbc.Checklist(
         id=component_id,
