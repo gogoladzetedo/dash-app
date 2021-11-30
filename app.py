@@ -5,6 +5,7 @@ import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import plotly.graph_objects as go
 import json
 import math
+import time
 
 import plotly.express as px
 from dash import Dash
@@ -46,7 +47,26 @@ app.title = "Portfolio Analytics"
 def serve_layout(): 
     return dbc.Container([ 
         html.H2("Stock Portfolio Dashboard", className="bg-dark text-white text-center p-3"),
-        dbc.Col(ifc.tabs(), width=12, className="mt-4"),
+
+
+
+        dbc.Modal(
+            [
+                dbc.ModalHeader("Please wait whle data is calculated..."),
+                dbc.ModalBody(
+                    dcc.Loading(id="ls-loading-1", children=[html.Div(id="ls-loading-output-1")], type="default"),
+                ),
+                dbc.ModalFooter(
+                ),
+            ],
+            id="modal",
+            is_open=False,
+        ),
+
+
+        
+
+        dbc.Col(ifc.tabs("row_input"), width=12, className="mt-4", id="col-tabs"),
         dbc.Col(html.Br() ),
         dbc.Col(
             html.Footer(
@@ -56,7 +76,7 @@ def serve_layout():
         )
     ], fluid=True, className = "container-md")
 
-app.layout = serve_layout
+app.layout = serve_layout()
 
 #@app.callback(
 #    Output('row1', 'value'),
@@ -381,19 +401,35 @@ def updload_file(_contents, _filename):
     return res, classN, is_disabled
 
 
+
+        
+
 @app.callback(
     [Output('load-output-area', 'children'),
-    Output('load-output-area2', 'children')],
-    Input('data-load', 'n_clicks')
+    Output('load-output-area2', 'children'),
+    Output('col-tabs', 'children')],
+    Input('data-load', 'n_clicks'),
 )
 def calcualte_data(n_clicks):
     if n_clicks > 0:
         
-        
-        
         sdl.run_data_load(d_f.initial_stocks())
-        return 'Data Load has been Completed!', dbc.Col(html.A(html.Button('Refresh Data'
-        , className = 'btn btn-danger m-1', ),href='/'))
+        res = html.P('Calculation complete! Check the metrics.'
+            , className="font-weight-bold text-success")
+
+        return 'Data Load has been Completed!', res, ifc.tabs("row1")
+
+@app.callback(Output("ls-loading-output-1", "children"), Input("data-load", "n_clicks"))
+def input_triggers_spinner(n_clicks):
+    if n_clicks > 0:
+        time.sleep(15)
+        return ''
+
+@app.callback(Output("modal", "is_open"), Input("data-load", "n_clicks"))
+def input_triggers_spinner(n_clicks):
+    if n_clicks > 0:
+        return True
+
 
 
 

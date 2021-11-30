@@ -199,7 +199,7 @@ def row_input():
     ]
 
 
-def tabs():
+def tabs(_active_tab):
     return dbc.Tabs(
     [
         dbc.Tab(row_input(), tab_id="row_input", label="Add portfolio |"),
@@ -210,5 +210,5 @@ def tabs():
         
     ],
     id="tabs",
-    active_tab="row_input"
+    active_tab=_active_tab
 )
