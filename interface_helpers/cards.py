@@ -152,7 +152,7 @@ def card_input_data():
             , className="card-text"),
             html.P("After adding the details of a single transaction, click 'Add Operation' button and start entering the next oepration."
             , className="card-text"),
-            dbc.Col(dcc.Input(id='stock-name', type='text', placeholder = 'Name of stock ticker'
+            dbc.Col(dcc.Input(id='stock-name', type='text', placeholder = 'Name of stock ticker (e.g. MSFT) or crypto (ETH-USD)'
             , className = 'text-dark form-control m-1')),
             dbc.Col(dcc.Input(id='stock-buy-date', type='text', placeholder = 'Date of the operation in YYYY-MM-DD format.'
             , className = 'text-dark form-control m-1')),
