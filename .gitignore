@@ -1,7 +1,7 @@
 dash-venv/
 dash-venv/.
 Untitled-1.ipynb
-__pycache__/
+__pycache__/*.pyc
 to-do.txt
-interface_helpers/__pycache__/
-/data/__pycache__/
+interface_helpers/__pycache__/*.pyc
+/data/__pycache__/*.pyc

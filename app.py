@@ -300,6 +300,9 @@ def update_graph5(_position_type, _position_value_type):
 
 
 ##### Functionality for the input data #####
+
+
+
 all_stocks = {}
 
 @app.callback(
@@ -351,9 +354,9 @@ def update_output(n_clicks, name, date, price, amount, text):
         else:  
             oprtation_type='Purchased'
 
-        current_operations_txt = oprtation_type + ' {} items of "{}" stock, on {} each priced as {}'.format(
+        current_operations_txt = '- ' + oprtation_type + ' {} items of "{}" stock, on {} each priced as {}'.format(
             amount, name, date, price, n_clicks)
-        text = text + ' \n ' + current_operations_txt
+        text = text + '\n' + current_operations_txt
 
         with open('data/initial_positions.json', 'w') as fp:
             json.dump(all_stocks, fp, sort_keys=True, indent=4)
@@ -369,9 +372,10 @@ def update_output(n_clicks, name, date, price, amount, text):
 
 
 @app.callback(
-    [Output('upload-data-text', 'children'),
-    Output('data-load', 'className'),
-    Output('data-load', 'disabled')], 
+    Output('upload-data-text', 'children'),
+    #Output('data-load', 'className'),
+    #Output('data-load', 'disabled')
+     
     [Input('upload-data', 'contents'),
     Input('upload-data', 'filename')]
 )
@@ -385,20 +389,20 @@ def updload_file(_contents, _filename):
                 json.dump(_all_stocks, fp, sort_keys=True, indent=4)
             res = html.P('File upload Completed! Click "Load and Calculate" to calculate dashboard metrics'
             , className="font-weight-bold text-success")
-            classN = "btn btn-success m-1"
-            is_disabled = False
+            #classN = "btn btn-success m-1"
+            #is_disabled = False
         except Exception as e:
             print(e)
             res = html.P('Upload process failed! Please, check file requirements listed above.'
             , className="font-weight-bold text-danger")
-            classN = "btn btn-success m-1 disabled"
-            is_disabled = True
+            #classN = "btn btn-success m-1 disabled"
+            #is_disabled = True
 
     else:
         res = 'upload .csv file below' 
-        classN = "btn btn-success m-1 disabled"
-        is_disabled = True
-    return res, classN, is_disabled
+        #classN = "btn btn-success m-1 disabled"
+        #is_disabled = True
+    return res #, classN, is_disabled
 
 
 
@@ -426,7 +430,7 @@ def input_triggers_spinner(n_clicks):
         return ''
 
 @app.callback(Output("modal", "is_open"), Input("data-load", "n_clicks"))
-def input_triggers_spinner(n_clicks):
+def input_triggers_modal(n_clicks):
     if n_clicks > 0:
         return True
 

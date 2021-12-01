@@ -137,7 +137,7 @@ def card_input_submit():
     return [
         dbc.CardBody([
             dbc.Col(html.Button('Load data and calculate', id='data-load', n_clicks=0
-            , className = 'btn btn-success m-1 disabled', disabled=True)),
+            , className = 'btn btn-success m-1')),
             dbc.Col(html.Div(id='load-output-area', children='Click "Load and Calculate" once you are done with entering oeprations.'
             , className = 'text-dark m-1')),
             dbc.Col(html.Div(id='load-output-area2')),
@@ -162,8 +162,8 @@ def card_input_data():
             , className = 'text-dark form-control m-1')),
             dbc.Col(html.Button('Add operation', id='submit-val', n_clicks=0
             , className = 'btn btn-info m-1')),
-            dbc.Col(html.Pre(id='container-button-basic', children='Enter values and press "Add" button '
-            , className = 'text-dark m-1')),
+            dbc.Col(html.P(id='container-button-basic', children='Enter values and press "Add" button \n'
+            , className = 'text-dark m-1', style={"white-space": "pre-wrap"})),
         ])
     ]
 

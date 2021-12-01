@@ -51,13 +51,13 @@ def initial_stocks():
     return init_file
 
 def generate_select_tickers(tickers_list):
-    res = ''
+    res = ""
     for row_n, tick in enumerate(tickers_list):
         if row_n == 0:
-            res = res + ''
+            res = res + ""
         else:
-            res = res + ', '
-        res = res + 'COALESCE(B.'+tick+', B_1.'+tick+', B_2.'+tick+', B_3.'+tick+') AS '+tick
+            res = res + ", "
+        res = res + "COALESCE(B.`"+tick+"`, B_1.`"+tick+"`, B_2.`"+tick+"`, B_3.`"+tick+"`) AS `"+tick+"`"
     return res
 
 def parse_contents(contents, filename):
