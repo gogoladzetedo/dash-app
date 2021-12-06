@@ -15,6 +15,14 @@ Upload of the transactions can be done either, by manually entering each stock m
 
 *Portal is still in active development phase.*
 
+### Installation using docker
+If you already have docker installed on your machine, dockerfile needed for the build and run for the application is included in the repository. 
+Build the application by running the commands from the dash-app folder:
+``` docker build -t portfolio-app-dash . ```
+``` docker run -dp 80:80 portfolio-app-dash ```
+And browse the application at the localhost:80 address.
+
+
 ### Installation:
 It is strongly recommended to create a python virtual environment: 
 * ```python -m venv DashVenv```
