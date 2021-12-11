@@ -83,3 +83,21 @@ mydict = {'a': 1, 'b': 2}
 with open('newfile.json', 'w') as fp:
     json.dump(mydict, fp, sort_keys=True, indent=4)
 
+
+
+# pandas_datareader
+from pandas_datareader import data
+import math
+
+df = data.get_data_yahoo(['MSFT', 'AMZN'], '2021-01-01', '2021-09-30')
+df = df.reset_index()
+df[['Close', 'Date']].copy()
+df.columns.droplevel()
+df.columns = df.columns.droplevel()
+df = df.rename(columns = {'':'Date'})
+
+df['new_col'] = 0
+df['new_col2'] = math.nan
+df['new_col3'] = df['MSFT']
+df['new_col3'] = df['MSFT'].apply(lambda x: x * 2)
+
