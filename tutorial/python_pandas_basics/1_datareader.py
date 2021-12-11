@@ -54,3 +54,32 @@ mydict['h']['h1']
 
 mydict['h']['h1'][1]['key2']
 
+
+##### File input / output
+
+# read, pandas
+import pandas as pd
+df = pd.read_csv('localfile.csv', sep=',')
+# write, pandas
+df.to_csv('output.csv', index=False)  
+
+
+ #read, csv
+import csv
+csv_file_content = []
+with open('localfile.csv', 'r') as file:
+    csv_reader_rows = csv.reader(file)
+    for row in csv_reader_rows:
+        csv_file_content.append(row)
+
+# read, file
+with open('postinumerot2021.csv', 'r') as file:
+    csv_content = file.readlines()
+print(csv_content[10])
+
+# write, file, json
+import json
+mydict = {'a': 1, 'b': 2}
+with open('newfile.json', 'w') as fp:
+    json.dump(mydict, fp, sort_keys=True, indent=4)
+
