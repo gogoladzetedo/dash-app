@@ -5,7 +5,7 @@ mylist = [1, 5, 6, 3, 36, 2, 6, 22, 9]
 
 mylist2 = mylist
 mylist3 = mylist.copy()
-print(mylist, mylist2, mylist3)
+#print(mylist, mylist2, mylist3)
 
 len(mylist)
 
@@ -23,7 +23,7 @@ mylist.pop(0)
 
 
 
-print(mylist, mylist2, mylist3)
+#print(mylist, mylist2, mylist3)
 
 
 
@@ -57,6 +57,10 @@ mydict['h']['h1'][1]['key2']
 
 ##### File input / output
 
+
+import os
+print (os.getcwd())
+
 # read, pandas
 import pandas as pd
 df = pd.read_csv('localfile.csv', sep=',')
@@ -73,9 +77,9 @@ with open('localfile.csv', 'r') as file:
         csv_file_content.append(row)
 
 # read, file
-with open('postinumerot2021.csv', 'r') as file:
+with open('localfile.csv', 'r') as file:
     csv_content = file.readlines()
-print(csv_content[10])
+print(csv_content[0])
 
 # write, file, json
 import json
@@ -84,20 +88,32 @@ with open('newfile.json', 'w') as fp:
     json.dump(mydict, fp, sort_keys=True, indent=4)
 
 
-
-# pandas_datareader
+# pandas_datareader, pandas operations
 from pandas_datareader import data
 import math
 
-df = data.get_data_yahoo(['MSFT', 'AMZN'], '2021-01-01', '2021-09-30')
+df = data.get_data_yahoo(['MSFT', 'AMZN', 'TSLA'], '2021-01-01', '2021-09-30')
 df = df.reset_index()
-df[['Close', 'Date']].copy()
+df = df[['Close', 'Date']]
 df.columns.droplevel()
 df.columns = df.columns.droplevel()
 df = df.rename(columns = {'':'Date'})
+
 
 df['new_col'] = 0
 df['new_col2'] = math.nan
 df['new_col3'] = df['MSFT']
 df['new_col3'] = df['MSFT'].apply(lambda x: x * 2)
 
+for col in df.columns:
+    print(col, df[col].max(), df[col].min(), df[col].mean())
+
+
+print(df.loc[2:5], '\n', df.iloc[2:5])
+print(df.loc[2, 'MSFT'], df['MSFT'].loc[2], '\n', df.iloc[2,0])
+print(df.loc[1], '\n', df.iloc[1])
+
+
+for i in range(0, len(df)):
+    df['MSFT'].loc[i]
+    
