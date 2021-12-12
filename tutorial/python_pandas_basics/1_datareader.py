@@ -122,6 +122,16 @@ for i in range(0, len(df)):
     df['MSFT'].loc[i]
 
 
+def get_df_tickers(input_df):
+    colnames = []
+    for colname in input_df.columns:
+        if colname != 'Date':
+            colnames.append(colname)
+    return colnames
+
+get_df_tickers(df)
+
+
 import matplotlib.pyplot as plt
 
 plt.plot(df['Date'], df['MSFT'])
