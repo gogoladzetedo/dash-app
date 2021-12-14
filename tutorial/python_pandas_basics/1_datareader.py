@@ -1,5 +1,9 @@
 from pandas_datareader import data
 
+mylist = [0, 1, 4, 5, 7, 9, 10, 'varx', True, [1, 'x'], 7]
+
+len(mylist)
+
 
 mylist = [1, 5, 6, 3, 36, 2, 6, 22, 9]
 
@@ -132,6 +136,7 @@ def get_df_tickers(input_df):
 get_df_tickers(df)
 
 
+# Plotting, matplotlib, Plotly
 import matplotlib.pyplot as plt
 
 plt.plot(df['Date'], df['MSFT'])
@@ -139,10 +144,14 @@ plt.plot(df['Date'], df['MSFT'].apply(lambda x: x* 0))
 plt.plot(df['Date'], df['TSLA'], marker="o")
 #plt.show()
 
+
+
+
 import plotly.graph_objects as go
 fig = go.Figure()
 graph_data = df
 for ticker in ['AMZN', 'MSFT', 'TSLA']:
     fig.add_trace(go.Scatter(x=graph_data['Date'], y=graph_data[ticker]
     , name = ticker, mode='lines'))
-fig.show()
+#fig.show()
+
